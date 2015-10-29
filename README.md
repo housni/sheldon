@@ -1,6 +1,6 @@
 # Sheldon: The not-so-bashful Bash framework. Bazinga!
 
-![Bazinga!](./resources/logo/sheldon.svg)
+![Bazinga!](https://cdn.rawgit.com/housni/Sheldon/master/resources/logo/sheldon.svg)
 
 ## Introduction
 As you can tell, I'm a fan of [The Big Bang Theory](https://en.wikipedia.org/wiki/The_Big_Bang_Theory).
