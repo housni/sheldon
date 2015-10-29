@@ -1,10 +1,6 @@
 ################################################################################
 # Sheldon: The not-so-bashful Bash framework. Bazinga!
 #
-# @namespace Sheldon::Storage::Registry
-# @copyright Copyright 2015, Housni Yakoob (http://housni.org)
-# @license http://opensource.org/licenses/bsd-license.php The BSD License
-#
 # This is a rudimentary implementation of the Registry pattern.
 #
 # ### Usage
@@ -21,6 +17,10 @@
 # $Registry::get 'loves'
 # echo "${WHO} loves his ${LOVES}"
 # ```
+#
+# @namespace Sheldon::Storage::Registry
+# @copyright Copyright 2015, Housni Yakoob (http://housni.org)
+# @license http://opensource.org/licenses/bsd-license.php The BSD License
 ################################################################################
 
 ################################################################################
@@ -56,8 +56,6 @@ Sheldon::Storage::Registry::set() {
 #     The key from which you want to retrieve the value. The result is assigned
 #     to the upper case version of this key.
 ################################################################################
-# The only function that doesn't require a return key and instead writes the value to $1 prefixed
-# with '='.
 Sheldon::Storage::Registry::get() {
   # Making the variable uppercase on declaration.
   local -u key
