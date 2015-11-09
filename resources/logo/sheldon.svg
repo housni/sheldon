@@ -20,6 +20,8 @@
    inkscape:export-xdpi="90"
    inkscape:export-ydpi="90"
    style="enable-background:new">
+  <title
+     id="title4151">Sheldon</title>
   <metadata
      id="metadata8">
     <rdf:RDF>
@@ -28,9 +30,23 @@
         <dc:format>image/svg+xml</dc:format>
         <dc:type
            rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
-        <dc:title></dc:title>
+        <dc:title>Sheldon</dc:title>
         <cc:license
            rdf:resource="http://opensource.org/licenses/bsd-license.php" />
+        <dc:creator>
+          <cc:Agent>
+            <dc:title>Housni Yakoob</dc:title>
+          </cc:Agent>
+        </dc:creator>
+        <dc:date>October 2015</dc:date>
+        <dc:subject>
+          <rdf:Bag>
+            <rdf:li>Sheldon</rdf:li>
+            <rdf:li>Shell</rdf:li>
+            <rdf:li>Bash</rdf:li>
+            <rdf:li>Framework</rdf:li>
+          </rdf:Bag>
+        </dc:subject>
       </cc:Work>
     </rdf:RDF>
   </metadata>
@@ -60,12 +76,12 @@
      id="namedview4"
      showgrid="false"
      inkscape:zoom="1.1935962"
-     inkscape:cx="171.31994"
-     inkscape:cy="195.03327"
+     inkscape:cx="329.81075"
+     inkscape:cy="200.20218"
      inkscape:window-x="773"
      inkscape:window-y="0"
      inkscape:window-maximized="1"
-     inkscape:current-layer="layer3" />
+     inkscape:current-layer="layer1" />
   <g
      inkscape:groupmode="layer"
      id="layer2"
@@ -94,20 +110,45 @@
      id="layer3"
      inkscape:label="Bazinga"
      style="display:inline">
-    <text
-       xml:space="preserve"
-       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:138.7502594px;line-height:125%;font-family:Verdana;-inkscape-font-specification:Verdana;letter-spacing:0px;word-spacing:0px;display:inline;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
-       x="49.309155"
-       y="488.19574"
-       id="text3338-4"
-       sodipodi:linespacing="125%"
+    <g
        transform="scale(0.99999841,1.0000016)"
-       inkscape:export-xdpi="90"
-       inkscape:export-ydpi="90"><tspan
-         sodipodi:role="line"
-         id="tspan3340-1"
-         x="49.309155"
-         y="488.19574"
-         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:condensed;font-size:138.7502594px;font-family:Impact;-inkscape-font-specification:'Impact Condensed'">BAZINGA!</tspan></text>
+       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:138.7502594px;line-height:125%;font-family:Verdana;-inkscape-font-specification:Verdana;letter-spacing:0px;word-spacing:0px;display:inline;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       id="text3338-4">
+      <g
+         id="g4158">
+        <path
+           id="path4142"
+           style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:condensed;font-size:138.7502594px;font-family:Impact;-inkscape-font-specification:'Impact Condensed'"
+           d="m 55.000083,378.50987 28.454643,0 q 13.482081,0 20.392494,2.10022 6.97816,2.10022 11.24636,8.53639 4.2682,6.36842 4.2682,20.59574 0,9.62038 -3.04872,13.41434 -2.98096,3.79395 -11.8561,5.82642 9.89138,2.23572 13.41433,7.45241 3.52296,5.14893 3.52296,15.8533 l 0,10.16237 q 0,11.11086 -2.57447,16.46305 -2.50672,5.35218 -8.06215,7.3169 -5.55543,1.96473 -22.763711,1.96473 l -32.993836,0 0,-109.68587 z m 28.522392,18.76651 0,24.38969 q 1.829227,-0.0677 2.845465,-0.0677 4.200447,0 5.352182,-2.03248 1.151736,-2.10022 1.151736,-11.8561 0,-5.14894 -0.948488,-7.18141 -0.948488,-2.10022 -2.506719,-2.64222 -1.490481,-0.54199 -5.894176,-0.60974 z m 0,41.46248 0,30.69037 q 6.029675,-0.20325 7.655654,-1.89698 1.693729,-1.69373 1.693729,-8.33315 l 0,-10.23012 q 0,-7.04591 -1.490481,-8.53639 -1.490482,-1.49048 -7.858902,-1.69373 z" />
+        <path
+           id="path4144"
+           style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:condensed;font-size:138.7502594px;font-family:Impact;-inkscape-font-specification:'Impact Condensed'"
+           d="m 180.94575,378.50987 16.32755,109.68587 -29.19988,0 -1.42274,-19.715 -10.23012,0 -1.69373,19.715 -29.53863,0 14.49832,-109.68587 41.25923,0 z m -15.10806,70.52686 q -2.16797,-18.63102 -4.33594,-46.00167 -4.33595,31.4356 -5.41993,46.00167 l 9.75587,0 z" />
+        <path
+           id="path4146"
+           style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:condensed;font-size:138.7502594px;font-family:Impact;-inkscape-font-specification:'Impact Condensed'"
+           d="m 253.5051,378.50987 0,21.95072 -21.27323,65.78443 21.27323,0 0,21.95072 -52.57334,0 0,-15.92105 21.95073,-71.8141 -19.37626,0 0,-21.95072 49.99887,0 z" />
+        <path
+           id="path4148"
+           style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:condensed;font-size:138.7502594px;font-family:Impact;-inkscape-font-specification:'Impact Condensed'"
+           d="m 289.4799,378.50987 0,109.68587 -28.52239,0 0,-109.68587 28.52239,0 z" />
+        <path
+           id="path4150"
+           style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:condensed;font-size:138.7502594px;font-family:Impact;-inkscape-font-specification:'Impact Condensed'"
+           d="m 364.7492,378.50987 0,109.68587 -24.99944,0 -14.83707,-49.86337 0,49.86337 -23.8477,0 0,-109.68587 23.8477,0 15.9888,49.38913 0,-49.38913 23.84771,0 z" />
+        <path
+           id="path4152"
+           style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:condensed;font-size:138.7502594px;font-family:Impact;-inkscape-font-specification:'Impact Condensed'"
+           d="m 441.57674,418.88836 -28.52239,0 0,-9.95913 q 0,-9.41713 -0.81299,-11.78835 -0.81299,-2.37122 -3.8617,-2.37122 -2.64222,0 -3.5907,2.03248 -0.94849,2.03247 -0.94849,10.43337 l 0,52.64109 q 0,7.38465 0.94849,9.75587 0.94848,2.30347 3.79395,2.30347 3.11646,0 4.20044,-2.64221 1.15174,-2.64222 1.15174,-10.29787 l 0,-13.00784 -5.75868,0 0,-16.66629 33.40033,0 0,58.87401 -17.95352,0 -2.64222,-7.8589 q -2.91321,5.08118 -7.38466,7.65565 -4.40369,2.50672 -10.43336,2.50672 -7.18141,0 -13.48209,-3.45521 -6.23292,-3.52295 -9.48488,-8.67189 -3.25196,-5.14893 -4.06495,-10.77211 -0.81299,-5.69093 -0.81299,-17.00504 l 0,-32.58734 q 0,-15.7178 1.69373,-22.83146 1.69373,-7.11366 9.68813,-13.00784 8.06215,-5.96193 20.79899,-5.96193 12.53359,0 20.79899,5.14894 8.2654,5.14894 10.77212,12.2626 2.50671,7.04591 2.50671,20.52799 l 0,4.74244 z" />
+        <path
+           id="path4154"
+           style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:condensed;font-size:138.7502594px;font-family:Impact;-inkscape-font-specification:'Impact Condensed'"
+           d="m 501.80572,378.50987 16.32754,109.68587 -29.19988,0 -1.42273,-19.715 -10.23013,0 -1.69372,19.715 -29.53863,0 14.49831,-109.68587 41.25924,0 z m -15.10806,70.52686 q -2.16798,-18.63102 -4.33595,-46.00167 -4.33594,31.4356 -5.41993,46.00167 l 9.75588,0 z" />
+        <path
+           id="path4156"
+           style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:condensed;font-size:138.7502594px;font-family:Impact;-inkscape-font-specification:'Impact Condensed'"
+           d="m 552.27885,378.50987 -4.47144,82.58621 -21.13773,0 -4.47145,-82.58621 30.08062,0 z m -2.23572,87.73515 0,21.95072 -25.60918,0 0,-21.95072 25.60918,0 z" />
+      </g>
+    </g>
   </g>
 </svg>
