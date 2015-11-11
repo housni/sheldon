@@ -6,6 +6,11 @@
 # @license http://opensource.org/licenses/bsd-license.php The BSD License
 ################################################################################
 
+# For Library.sh, we have to manually source files since the function that
+# sources is defined below and it can't be used until it's defined.
+. ${Sheldon[dir]}/util/Array.sh
+Array="Sheldon::Util::Array"
+
 ################################################################################
 # Locates and sources the script based on $1. This function assumes the first
 # parameter is a namespace, of sorts, separated by '::' (default). Based on this
@@ -26,9 +31,9 @@
 # ```
 #
 # @see use()
-# @param string $namespace $1
+# @param string $1
 #     The namespace (as it were) of the file you want to source.
-# @param string $separator $2 optional
+# @param string $2 optional
 #     The separator used in $namespace.
 ################################################################################
 Sheldon::Core::Libraries::load() {
@@ -39,7 +44,6 @@ Sheldon::Core::Libraries::load() {
   local -i len
   local script
   local tmp
-  local dir
 
   namespace="${1}"
   separator="${2:-'::'}"
@@ -56,16 +60,14 @@ Sheldon::Core::Libraries::load() {
   # We don't need the part with 'Sheldon'.
   unset parts[0]
 
-  # TODO: Should use Array::pop.
   # Move the file base name to `script`.
   len="${#parts[@]}"
   script="${parts[len]}"
   unset parts[len]
 
-  # Join the parts in the middle together.
-  for dir in "${!parts[@]}"; do
-    path+="${parts[dir],,}/"
-  done
+  # Join the parts and convert them to lower case.
+  $Array::implode =path '/' parts
+  path="${path,,}"
 
   # Append the file base name and the extension.
   path="${path}${script}.sh"
