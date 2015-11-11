@@ -36,10 +36,6 @@ Sheldon[file]="${Sheldon[dir]}/$(basename "${BASH_SOURCE[0]}")"
 Sheldon[base]="$(basename ${Sheldon[file]} .sh)"
 
 
-# Source a few commonly used libraries.
-. "${Sheldon[dir]}/core/Sheldon.sh"
-. "${Sheldon[dir]}/core/Libraries.sh"
-
 
 ################################################################################
 # Assigns the value in $2 to the value of $1.
@@ -225,6 +221,11 @@ use() {
     eval "$3"="$1"
   fi
 }
+
+
+# Source a few commonly used libraries.
+. "${Sheldon[dir]}/core/Sheldon.sh"
+. "${Sheldon[dir]}/core/Libraries.sh"
 
 
 # Set the traps.
