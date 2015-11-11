@@ -55,6 +55,8 @@ Sheldon::Storage::Registry::set() {
 # @param mixed $1
 #     The key from which you want to retrieve the value. The result is assigned
 #     to the upper case version of this key.
+# @assign
+#     The value of the key in $1 is assigned.
 ################################################################################
 Sheldon::Storage::Registry::get() {
   # Making the variable uppercase on declaration.
