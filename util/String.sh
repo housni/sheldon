@@ -6,6 +6,51 @@
 # @license http://opensource.org/licenses/bsd-license.php The BSD License
 ################################################################################
 
+
+################################################################################
+# Join string arguments with a glue string.
+#
+# ### Usage
+#
+# ```
+# use Sheldon::Util::String as String
+#
+# declare NAME
+# $String::join =NAME '&' Amy Sheldon
+# echo "${NAME} = ShAmy"
+# ```
+# The above will yield 'Amy&Sheldon = ShAmy'.
+#
+# You can provide as many string arguments as you want to be joined:
+# ```
+# $String::join =NAME '/' Raj Howard Sheldon Leonard
+# ```
+# The above will yield 'Raj/Howard/Sheldon/Leonard'.
+#
+# @param string $1
+#     The return key prefixed with '='.
+# @param string $2
+#     The glue that joins the strings together.
+# @param array $3
+#     The string to join with $2. You can provide as many arguments as you want.
+# @assign
+#     Join strings in $3 with the glue string, $2.
+################################################################################
+Sheldon::Util::String::join() {
+  local tmp
+  local assign
+
+  tmp="${IFS}"
+  assign="$1"
+  IFS="${2}"
+
+  shift 2
+
+  _assign "$assign" "$*"
+  IFS="${tmp}"
+}
+
+
 ################################################################################
 # Replaces variable placeholders inside a string with any given data. Each key
 # in the `$data` array corresponds to a variable placeholder name in `$str`.
@@ -17,8 +62,8 @@
 # ```
 # use Sheldon::Util::String as String
 #
-# declare -x DIR
-# declare -x STRING
+# declare DIR
+# declare STRING
 # declare -A DATA
 #
 # DATA=(
@@ -37,8 +82,8 @@
 # ```
 # use Sheldon::Util::String as String
 #
-# declare -x DIR
-# declare -x STRING
+# declare DIR
+# declare STRING
 # declare -A DATA
 #
 # DATA=(
@@ -59,12 +104,12 @@
 #     The string after the name of the variable place-holder. Defaults to `'}'`.
 # @param string $1
 #     The return key prefixed with '='.
-# @param string $str $2
+# @param string $2
 #     A string containing variable placeholders.
-# @param array $data $3
+# @param array $3
 #     An associate array where each key stands for a placeholder variable name
 #     to be replaced with a value.
-# @assign string
+# @assign
 #     $2 replaced with all the placeholders in $3.
 ################################################################################
 Sheldon::Util::String::insert() {
@@ -100,16 +145,4 @@ Sheldon::Util::String::insert() {
   done
 
   _assign "$1" "$str"
-}
-
-# TODO
-Sheldon::Util::String::join() {
-  local tmp
-
-  tmp="${IFS}"
-  IFS="${1:-"$tmp"}"
-
-  shift
-  echo "$*"
-  IFS="${tmp}"
 }
