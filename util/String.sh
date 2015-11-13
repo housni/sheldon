@@ -16,10 +16,10 @@
 # use Sheldon::Util::String as String
 #
 # declare NAME
-# $String::join =NAME '&' Amy Sheldon
+# $String::join =NAME ' & ' Amy Sheldon
 # echo "${NAME} = ShAmy"
 # ```
-# The above will yield 'Amy&Sheldon = ShAmy'.
+# The above will yield 'Amy & Sheldon = ShAmy'.
 #
 # You can provide as many string arguments as you want to be joined:
 # ```
@@ -37,17 +37,27 @@
 #     Join strings in $3 with the glue string, $2.
 ################################################################################
 Sheldon::Util::String::join() {
-  local tmp
   local assign
+  local trim
+  local glue
+  local joined
 
-  tmp="${IFS}"
+  glue="$2"
   assign="$1"
-  IFS="${2}"
+  trim="${#glue}"
+
+  if [[ "$glue" == *"%"* ]]
+  then
+    # We need to escape '%' since we are using printf.
+    glue=${glue//%/%%}
+  fi
 
   shift 2
 
-  _assign "$assign" "$*"
-  IFS="${tmp}"
+  joined="$( printf "${glue}%s" "$@" )"
+  joined="${joined:$trim}"
+
+  _assign "$assign" "$joined"
 }
 
 
