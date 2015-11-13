@@ -100,19 +100,18 @@ Sheldon::Util::Array::end() {
 #     Join array elements in $3 with the glue string, $2.
 ################################################################################
 Sheldon::Util::Array::implode() {
-  local -n array
+  local -n Sheldon_string_data
   local glue
-  local tmp
-  local assign
+  local regex
 
-  assign="$1"
+  # If this contains '%s', it will break printf.
   glue="$2"
-  array="$3"
-  tmp="${IFS}"
-  IFS="${glue}"
+  Sheldon_string_data="$3"
 
-  shift 2
+  regex="$( printf "${glue}%s" "${Sheldon_string_data[@]}" )"
 
-  _assign "$assign" "${array[*]}"
-  IFS="${tmp}"
+  # remove leading separator
+  regex="${regex:${#glue}}"
+
+  _assign "$1" "${regex}"
 }
