@@ -54,14 +54,14 @@ Sheldon[base]="$(basename ${Sheldon[file]} .sh)"
 # ### Usage
 #
 # ```
-#   Sheldon.add() {
+#   Sheldon::add() {
 #     calculated=$(($2 + $3))
 #     _assign "$1" "${calculated}"
 #   }
 #
 #   declare SUM
 #
-#   Sheldon.add =SUM 4 5
+#   Sheldon::add =SUM 4 5
 #   echo "${SUM}" # will yield '9'
 # ```
 # If you want to, you can directly assign the value to the second parameter of
