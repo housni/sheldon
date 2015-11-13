@@ -102,16 +102,22 @@ Sheldon::Util::Array::end() {
 Sheldon::Util::Array::implode() {
   local -n Sheldon_string_data
   local glue
-  local regex
+  local joined
+  local trim
 
   # If this contains '%s', it will break printf.
   glue="$2"
   Sheldon_string_data="$3"
+  trim="${#glue}"
 
-  regex="$( printf "${glue}%s" "${Sheldon_string_data[@]}" )"
+  if [[ "$glue" == *"%"* ]]
+  then
+    # We need to escape '%' since we are using printf.
+    glue=${glue//%/%%}
+  fi
 
-  # remove leading separator
-  regex="${regex:${#glue}}"
+  joined="$( printf "${glue}%s" "${Sheldon_string_data[@]}" )"
+  joined="${joined:$trim}"
 
-  _assign "$1" "${regex}"
+  _assign "$1" "${joined}"
 }
