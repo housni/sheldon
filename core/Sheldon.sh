@@ -1,7 +1,7 @@
 ################################################################################
 # Sheldon: The not-so-bashful Bash framework. Bazinga!
 #
-# @namespace Sheldon::Core::Sheldon
+# @namespace Sheldon.Core.Sheldon
 # @copyright Copyright 2015, Housni Yakoob (http://housni.org)
 # @license http://opensource.org/licenses/bsd-license.php The BSD License
 ################################################################################
@@ -10,7 +10,7 @@
 # Reads a randon line from `sheldon/resources/quotes/banner.txt`, which contains
 # some quotes, and displays it.
 ################################################################################
-Sheldon::Core::Sheldon::catchphrase() {
+Sheldon.Core.Sheldon.catchphrase() {
   printf 'Sheldon says:\n'
   printf "\t$(sort -R "${Sheldon[dir]}/resources/quotes/banner.txt" | head -n1)"
   printf '\n\n'
@@ -34,7 +34,7 @@ Sheldon::Core::Sheldon::catchphrase() {
 # set -e
 # ```
 ################################################################################
-Sheldon::Core::Sheldon::strict() {
+Sheldon.Core.Sheldon.strict() {
   # Exit if any command has a non-zero exit status.
   set -e
 

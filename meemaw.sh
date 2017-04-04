@@ -1,3 +1,5 @@
+#!/usr/bin/env bash
+
 ################################################################################
 # Sheldon: The not-so-bashful Bash framework. Bazinga!
 #
@@ -8,6 +10,7 @@
 
 # Version check.
 # Sheldon has only been tested on 4.3.30(1)-release
+# We are assuming that the shell is Bash, though.
 [[ ${BASH_VERSION} =~ ([^\.]).([^\.])* ]]
 if [[ ${BASH_REMATCH[1]} < 4
    || ${BASH_REMATCH[1]} = 4 && ${BASH_REMATCH[2]} < 3 ]]; then
@@ -15,14 +18,13 @@ if [[ ${BASH_REMATCH[1]} < 4
        "using version ${BASH_VERSION}"
 fi
 
-
 # Our traps need access to some vars to do their job properly.
 set -o errtrace
 set -o functrace
 
 
 # Less eager word splitting - no space.
-IFS=$'\n\t'
+# IFS=$'\n\t'
 
 
 # Setting and reserving some of Sheldons variables.
@@ -36,11 +38,10 @@ Sheldon[file]="${Sheldon[dir]}/$(basename "${BASH_SOURCE[0]}")"
 Sheldon[base]="$(basename ${Sheldon[file]} .sh)"
 
 
-
 ################################################################################
 # Assigns the value in $2 to the value of $1.
 # $1 should be the name of the variable, prefixed with '=', that is passed into
-# the parent function. _assign() will eval the value of $1 and assign it to $2
+# the parent function. _assign() will eval the value of $1 and assign $2 to it
 # which would be an actual value.
 # It's important that $1 is prefixed with a '=' or no assignation will take place.
 #
@@ -54,14 +55,14 @@ Sheldon[base]="$(basename ${Sheldon[file]} .sh)"
 # ### Usage
 #
 # ```
-#   Sheldon::add() {
+#   Sheldon.add() {
 #     calculated=$(($2 + $3))
 #     _assign "$1" "${calculated}"
 #   }
 #
 #   declare SUM
 #
-#   Sheldon::add =SUM 4 5
+#   Sheldon.add =SUM 4 5
 #   echo "${SUM}" # will yield '9'
 # ```
 # If you want to, you can directly assign the value to the second parameter of
@@ -73,13 +74,75 @@ Sheldon[base]="$(basename ${Sheldon[file]} .sh)"
 # @param string $1
 #     The name of the variable you want to assign $2 to. This is typically
 #     passed in from the code written by the user. Sheldon simply handles it.
-# @param integer $2
+# @param string $2
 #     The value you want to assign to the variable named held in $1.
 ################################################################################
 _assign() {
   if [[ "$1" = =* ]]; then
-    local name="${1:1}"
+    local name
+    name="${1:1}"
+
     eval "$name=(\"\$2\")"
+  fi
+}
+
+
+####################################################################a############
+# Assigns the elements of the array in $2 to the value of $1.
+# $1 should be the name of the variable, prefixed with '=', that is passed into
+# the parent function. _assign[]() will eval the value of $1 and assign all the
+# elements of the array in $2 to it.
+# It's important that $1 is prefixed with a '=' or no assignation will take place.
+#
+# This must be used in every Sheldon script that wishes to assign an array to a
+# variable inside a function and have that be visible outside the scope of the
+# function. We use this so that the user can control the name of the variable
+# and not pollute the variable namespace.
+#
+# Not ideal but this is the best you can do with Bash, I suppose.
+#
+# ### Usage
+#
+# ```
+#   Sheldon.append() {
+#     local -n array1
+#     local -n array2
+#     local appended
+#
+#     array1="$2"
+#     array2="$3"
+#
+#     appended=( "${array1[@]}" "${array2[@]}" )
+#
+#     _assign[] "$1" "${appended[@]}"
+#   }
+#
+#   declare CAST
+#   declare -a girls
+#   declare -a guys
+#
+#   girls=( Penny Bernadette Amy )
+#   guys=( Sheldon Leonard Howard Raj )
+#
+#   Sheldon.append =CAST girls guys
+#   echo "${CAST[@]}" # yields 'Penny Bernadette Amy Sheldon Leonard Howard Raj'
+# ```
+#
+# @param string $1
+#     The name of the variable you want to assign $2 to. This is typically
+#     passed in from the code written by the user. Sheldon simply handles it.
+# @param array $2
+#     The array you want to assign to the variable named held in $1.
+################################################################################
+_assign[]() {
+  if [[ "$1" = =* ]]; then
+    local name
+    local -n array
+
+    name="${1:1}"
+    array="$2"
+
+    eval "$name=(\"\${array[@]}\")"
   fi
 }
 
@@ -138,7 +201,7 @@ _error() {
   local -A placeholders
   local string
 
-  Sheldon::Core::Libraries::load 'Sheldon::Util::String'
+  Sheldon.Core.Libraries.load 'Sheldon.Util.String'
 
   case "$#" in
     0)
@@ -149,14 +212,14 @@ _error() {
     1)
       string="$(< "${Sheldon[dir]}/resources/templates/errors/1.tpl")"
       placeholders=( ['message']="${1}" )
-      Sheldon::Util::String::insert =Sheldon_tmp "${string}" placeholders
+      Sheldon.Util.String.insert =Sheldon_tmp "${string}" placeholders
       printf "${Sheldon_tmp}"
       ;;
 
     3|4)
       string="$(< "${Sheldon[dir]}/resources/templates/errors/$#.tpl")"
       placeholders=( ['message']="${1}" ['line']="${2}" ['file']="${3}" )
-      Sheldon::Util::String::insert =Sheldon_tmp "${string}" placeholders
+      Sheldon.Util.String.insert =Sheldon_tmp "${string}" placeholders
       printf "${Sheldon_tmp}"
       ;;
 
@@ -181,10 +244,10 @@ _error() {
 # You can load a script the default way but you'd have to use the entire
 # namespace when you want to use its functions:
 # ```
-# use Sheldon::Storage::Registry
+# use Sheldon.Storage.Registry
 #
-# Sheldon::Storage::Registry::set 'name' 'Sheldon'
-# Sheldon::Storage::Registry::set 'has' 'Eidetic memory'
+# Sheldon.Storage.Registry.set 'name' 'Sheldon'
+# Sheldon.Storage.Registry.set 'has' 'Eidetic memory'
 # ```
 #
 # ### Shortened usage
@@ -193,10 +256,10 @@ _error() {
 # not the same as an alias in Bash). Then, the alias becomes a variable which
 # you can use to access functions with:
 # ```
-# use Sheldon::Storage::Registry as Registry
+# use Sheldon.Storage.Registry as Registry
 #
-# $Registry::set 'who' 'Sheldon'
-# $Registry::set 'has' 'Eidetic memory'
+# $Registry.set 'who' 'Sheldon'
+# $Registry.set 'has' 'Eidetic memory'
 # ```
 #
 # The latter is preferred over the former just because it's a lot more readable
@@ -205,7 +268,7 @@ _error() {
 # Due to the way Bash handles variables, the alias would be $3 and not $2. If
 # you look at the syntax, 'as' would be $2 and the alias would be $3.
 #
-# @see Sheldon::Core::Libraries::load()
+# @see Sheldon.Core.Libraries.load()
 # @param string $1
 #     The full function name minus the last part.
 # @param string $2 optional
@@ -214,7 +277,7 @@ _error() {
 #     The name of the alias.
 ################################################################################
 use() {
-  Sheldon::Core::Libraries::load "${1}"
+  Sheldon.Core.Libraries.load "${1}"
 
   # If a third param is present, treat it as an alias.
   if [[ ! -z "${3+x}" ]]; then

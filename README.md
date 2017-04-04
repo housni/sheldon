@@ -9,7 +9,7 @@ I had some [Bash](https://en.wikipedia.org/wiki/Bash_(Unix_shell)) utility funct
 
 After I started, I wanted to find out how far I could push Bash. Bash is really meant for simple scripting. It's not an OOP language. But, experimenting with it was fun and this is exactly that, an experiment. A lot of the things in this framework should really be done with a more suitable tool like Perl or Python.
 
-A lot of the functions and coding style is deeply inspired by [li₃](https://github.com/UnionOfRAD/lithium) aka Lithium. A developer familiar with li₃ is likely to find Sheldon easy to deal with...if only Leonard had such luck!
+A lot of the functions and coding style is deeply inspired by [li₃](https://github.com/UnionOfRAD/lithium) aka Lithium. PHP and Ruby have also influenced the syntax, somewhat. A developer familiar with these three is likely to find Sheldon easy to deal with...if only Leonard had such luck!
 
 
 ## Requirements
@@ -25,11 +25,53 @@ You could try this on a Mac but I have no idea if it will work.
 ## Usage
 Sheldon only needs `meemaw.sh` to work. That's his bootstrap file.
 I'll assume you have Sheldon installed at `/usr/lib/sheldon` and that `meemaw.sh` lives at `/usr/lib/sheldon/meemaw.sh`.
+
 You need to make it executable:
 ```
 $ chmod +x /usr/lib/sheldon/meemaw.sh
 ```
 
+### Basic
+Suppose you create the script `/usr/bin/basic.sh`, you could use it like this:
+```shell
+# Bootstrap Sheldon.
+. ./lib/sheldon/meemaw.sh
+
+# Set strict mode.
+# Optional but highly recommend.
+Sheldon.Core.Sheldon.strict
+
+# Load the String file.
+# This file would live at /usr/lib/sheldon/util/String.sh
+use Sheldon.Util.String as String
+
+# Declare your variables to avoid bugs.
+declare CAST
+
+# $String.join will assign the result to 'CAST'.
+# To understand this, read the 'Returning Values' for 'Functions' documentation:
+# https://github.com/housni/Sheldon/wiki/Functions#returning-values
+$String.join =CAST '/' $@
+
+echo "Awesome cast: ${CAST}"
+
+# Always exit with an appropriate exit code.
+exit 0
+```
+
+If you ran the script like:
+```shell
+$ /usr/bin/basic.sh Raj Howard Sheldon Leonard
+```
+
+The output would read:
+```shell
+Awesome cast: Raj/Howard/Sheldon/Leonard
+```
+
+
+
+### Advanced
 Suppose you create the script `/usr/bin/setup.sh`, you could use it like this:
 ```shell
 # Uncomment this if you need to debug.
@@ -39,11 +81,11 @@ Suppose you create the script `/usr/bin/setup.sh`, you could use it like this:
 . ./lib/sheldon/meemaw.sh
 
 # Set strict mode. Although optional, I highly recommend scripting with this.
-Sheldon::Core::Sheldon::strict
+Sheldon.Core.Sheldon.strict
 
 # Load (source) the String file.
 # This file would live at /usr/lib/sheldon/util/String.sh
-use Sheldon::Util::String as String
+use Sheldon.Util.String as String
 
 # It's good practice to declare your variables.
 declare DIR
@@ -55,7 +97,7 @@ DATA=( ['client']="$1" ['domain']="$2" )
 
 # $String.insert will assign the result to 'DIR'.
 # Look at the function in /usr/lib/sheldon/util/String.sh to understand this.
-$String::insert =DIR "${STRING}" DATA
+$String.insert =DIR "${STRING}" DATA
 echo "Setting up structure for '${DIR}'"
 
 mkdir -p ${DIR}/{backup,bin,docs,src,resources,tests,tmp,var/logs}
@@ -96,19 +138,19 @@ This example uses the Registry pattern:
 . ./lib/sheldon/meemaw.sh
 
 # Set strict mode. Although optional, I highly recommend scripting with this.
-Sheldon::Core::Sheldon::strict
+Sheldon.Core.Sheldon.strict
 
-use Sheldon::Storage::Registry as Registry
+use Sheldon.Storage.Registry as Registry
 
 declare WHO
 declare LOVES
 
-$Registry::set 'who' 'Sheldon'
-$Registry::set 'loves' 'Meemaw'
+$Registry.set 'who' 'Sheldon'
+$Registry.set 'loves' 'Meemaw'
 
 # The result is stored in the upper case version of the key.
-$Registry::get 'who'
-$Registry::get 'loves'
+$Registry.get 'who'
+$Registry.get 'loves'
 
 echo "${WHO} loves his ${LOVES}"
 

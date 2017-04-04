@@ -6,19 +6,19 @@
 # ### Usage
 #
 # ```
-# use Sheldon::Storage::Registry as Registry
+# use Sheldon.Storage.Registry as Registry
 # declare WHO
 # declare LOVES
-# $Registry::set 'who' 'Sheldon'
-# $Registry::set 'loves' 'Meemaw'
+# $Registry.set 'who' 'Sheldon'
+# $Registry.set 'loves' 'Meemaw'
 #
 # # The result is stored in the upper case version of the key.
-# $Registry::get 'who'
-# $Registry::get 'loves'
+# $Registry.get 'who'
+# $Registry.get 'loves'
 # echo "${WHO} loves his ${LOVES}"
 # ```
 #
-# @namespace Sheldon::Storage::Registry
+# @namespace Sheldon.Storage.Registry
 # @copyright Copyright 2015, Housni Yakoob (http://housni.org)
 # @license http://opensource.org/licenses/bsd-license.php The BSD License
 ################################################################################
@@ -29,7 +29,7 @@
 # ### Usage
 #
 # ```
-# Sheldon::Storage::Registry::set 'foo' 'bar'
+# Sheldon.Storage.Registry.set 'foo' 'bar'
 # ```
 #
 # @param mixed $1
@@ -37,7 +37,7 @@
 # @param mixed $2
 #     The value to be assigned to the key, $1.
 ################################################################################
-Sheldon::Storage::Registry::set() {
+Sheldon.Storage.Registry.set() {
   Sheldon["register.${1}"]="$2"
 }
 
@@ -47,7 +47,7 @@ Sheldon::Storage::Registry::set() {
 # ### Usage
 #
 # ```
-# Sheldon::Storage::Registry::get 'foo'
+# Sheldon.Storage.Registry.get 'foo'
 # ```
 # The above will assign the result to the upper case version of the key
 # parameter ($1). So, the result would be in ${FOO}.
@@ -58,7 +58,7 @@ Sheldon::Storage::Registry::set() {
 # @assign
 #     The value of the key in $1 is assigned.
 ################################################################################
-Sheldon::Storage::Registry::get() {
+Sheldon.Storage.Registry.get() {
   # Making the variable uppercase on declaration.
   local -u key
 
