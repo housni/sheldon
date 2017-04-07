@@ -35,7 +35,7 @@ $ chmod +x /usr/lib/sheldon/meemaw.sh
 Suppose you create the script `/usr/bin/basic.sh`, you could use it like this:
 ```shell
 # Bootstrap Sheldon.
-. ./lib/sheldon/meemaw.sh
+. /usr/lib/sheldon/meemaw.sh
 
 # Set strict mode.
 # Optional but highly recommend.
@@ -78,7 +78,7 @@ Suppose you create the script `/usr/bin/setup.sh`, you could use it like this:
 # set -x
 
 # Bootstrap Sheldon.
-. ./lib/sheldon/meemaw.sh
+. /usr/lib/sheldon/meemaw.sh
 
 # Set strict mode. Although optional, I highly recommend scripting with this.
 Sheldon.Core.Sheldon.strict
@@ -135,7 +135,7 @@ This example uses the Registry pattern:
 # set -x
 
 # Bootstrap Sheldon.
-. ./lib/sheldon/meemaw.sh
+. /usr/lib/sheldon/meemaw.sh
 
 # Set strict mode. Although optional, I highly recommend scripting with this.
 Sheldon.Core.Sheldon.strict
