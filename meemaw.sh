@@ -286,10 +286,39 @@ use() {
 }
 
 
+################################################################################
+# If a function doesn't exist, this function is called by Bash, which, in turn,
+# will search for a function named `__call()` and if that does exist, it will be
+# called. This behaves similar to PHP's `__call()` magic method.
+# 
+# ### Usage
+#
+# ```
+#   __call() {
+#     if [ "$1" = "legacyAdd" ] || [ "$1" = "newAdd" ]; then
+#       local -i first=$2
+#       local -i second=$3
+#       
+#       echo $((first + second))
+#     else
+#       exit 127
+#     fi
+#   }
+#   
+#   legacyAdd 1 2
+#   newAdd 1 2
+# ```
+################################################################################
+command_not_found_handle() {
+  if declare -F | grep -q __call; then
+    __call "$@"
+  fi
+}
+
+
 # Source a few commonly used libraries.
 . "${Sheldon[dir]}/core/Sheldon.sh"
 . "${Sheldon[dir]}/core/Libraries.sh"
-
 
 # Set the traps.
 for sig in INT TERM EXIT; do
