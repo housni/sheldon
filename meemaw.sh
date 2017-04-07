@@ -288,8 +288,10 @@ use() {
 
 ################################################################################
 # If a function doesn't exist, this function is called by Bash, which, in turn,
-# will search for a function named `__call()` and if that does exist, it will be
-# called. This behaves similar to PHP's `__call()` magic method.
+# will search for a user defined function named `__call()` and if that exists,
+# it will be called with the function name as the first argument and the
+# parameters as the following arguments.
+# This behaves similar to PHP's `__call()` magic method.
 # 
 # ### Usage
 #
