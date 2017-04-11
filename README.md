@@ -170,7 +170,7 @@ A lot of things can go wrong with big bash libraries unless you code using good 
 * Using `local` for variables within functions in order to limit scope.
 * Using quotes and braces for variables where necessary.
 * Being consistent in every piece of code you write.
-* Follow the [Google Shell Style Guide](https://google-styleguide.googlecode.com/svn/trunk/shell.xml).
+* Follow the [Google Shell Style Guide](https://google.github.io/styleguide/shell.xml).
 
 In other words, code like Sheldon Lee Cooper would ;)
 
