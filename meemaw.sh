@@ -307,8 +307,9 @@ use() {
 #     fi
 #   }
 #   
-#   legacyAdd 1 2
-#   newAdd 1 2
+#   legacyAdd 1 2 # Output: 3
+#   newAdd 1 2 # Output: 3
+#   blahAdd 1 2 # Exits with 127
 # ```
 ################################################################################
 command_not_found_handle() {
