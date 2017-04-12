@@ -60,9 +60,9 @@ Sheldon.Storage.Registry.set() {
 ################################################################################
 Sheldon.Storage.Registry.get() {
   # Making the variable uppercase on declaration.
-  local -u key
+  local -u _shld_key
 
   # Appending literal '=' because '_assign()' requires it.
-  key="=$1"
-  _assign "${key}" "${Sheldon["register.${1}"]}"
+  _shld_key="=$1"
+  _assign "${_shld_key}" "${Sheldon["register.${1}"]}"
 }
