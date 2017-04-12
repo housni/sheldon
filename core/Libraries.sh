@@ -9,7 +9,6 @@
 # For Library.sh, we have to manually source files since the function that
 # sources is defined below and it can't be used until it's defined.
 . ${Sheldon[dir]}/util/Array.sh
-Array="Sheldon.Util.Array"
 
 ################################################################################
 # Locates and sources the script based on $1. This function assumes the first
@@ -64,7 +63,7 @@ Sheldon.Core.Libraries.load() {
   unset parts[len]
 
   # Join the parts and convert them to lower case.
-  $Array.implode =path '/' parts
+  Sheldon.Util.Array.implode =path '/' parts
   path="${path,,}"
 
   # Append the file base name and the extension.
