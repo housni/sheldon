@@ -46,12 +46,12 @@ Sheldon.Util.File.isLink?() {
   fi
 }
 
-Sheldon.Util.File.isSocket?() {
+Sheldon.Util.File.isPipe?() {
   local _shld_assign
 
   _shld_assign="$1"
 
-  if [ -S "${2}" ]; then
+  if [ -p "${2}" ]; then
     _assign "$_shld_assign" 'true'
   else
     _assign "$_shld_assign" 'false'

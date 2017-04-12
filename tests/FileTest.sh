@@ -5,8 +5,8 @@ FileTest.setUp() {
   FILE_SHELDON_TEMP_DIR="$(mktemp -d)"
   FILE_SHELDON_TEMP_SYMLINK="/tmp/FileTest.symlink.${RANDOM}"
   $(ln -s $FILE_SHELDON_TEMP_FILE $FILE_SHELDON_TEMP_SYMLINK)
-  FILE_SHELDON_TEMP_SOCKET="/tmp/FileTest.sock.${RANDOM}"
-  $(mknod $FILE_SHELDON_TEMP_SOCKET p)
+  FILE_SHELDON_TEMP_PIPE="/tmp/FileTest.pipe.${RANDOM}"
+  $(mknod $FILE_SHELDON_TEMP_PIPE p)
 }
 
 FileTest.tearDown() {
@@ -101,23 +101,22 @@ EOF
 EOF
 }
 
-# FileTest.testIsSocket?() {
-#   local result
-#   local expected
-#   local arg
+FileTest.testIsPipe?() {
+  local result
+  local expected
+  local arg
 
-#   arg="$FILE_SHELDON_TEMP_SOCKET"
-#   expected='true'
-#   $File.isSocket? =result "$arg"
-#   $Test.it 'File.isSocket?: Should pass if file is a socket.' <<EOF
-#     [ "$result" = "$expected" ]
-# EOF
+  arg="$FILE_SHELDON_TEMP_PIPE"
+  expected='true'
+  $File.isPipe? =result "$arg"
+  $Test.it 'File.isPipe?: Should pass if file is a pipe.' <<EOF
+    [ "$result" = "$expected" ]
+EOF
 
-# exit
-#   arg="$FILE_SHELDON_TEMP_DIR"
-#   expected='false'
-#   $File.isLink? =result "$arg"
-#   $Test.it 'File.isSocket?: Should pass if file is a dir.' <<EOF
-#     [ "$result" = "$expected" ]
-# EOF
-# }
+  arg="$FILE_SHELDON_TEMP_DIR"
+  expected='false'
+  $File.isPipe? =result "$arg"
+  $Test.it 'File.isPipe?: Should pass if file is a dir.' <<EOF
+    [ "$result" = "$expected" ]
+EOF
+}
