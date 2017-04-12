@@ -33,41 +33,41 @@
 # @param string $1
 #     The namespace (as it were) of the file you want to source.
 # @param string $2 optional
-#     The separator used in $namespace.
+#     The separator used in $_shld_namespace.
 ################################################################################
 Sheldon.Core.Libraries.load() {
-  local namespace
-  local separator
-  local path
-  local -a parts
-  local -i len
-  local script
+  local _shld_namespace
+  local _shld_separator
+  local _shld_path
+  local -a _shld_parts
+  local -i _shld_len
+  local _shld_script
 
-  namespace="${1}"
-  separator="${2:-.}"
+  _shld_namespace="${1}"
+  _shld_separator="${2:-.}"
 
   # TODO: Check for '*' and escape it.
-  parts=(${namespace//"$separator"/ })
+  _shld_parts=(${_shld_namespace//"$_shld_separator"/ })
 
   # Validate that we are using this for Sheldon libs.
-  if [[ ! "${parts[0]}" = 'Sheldon' ]]; then
+  if [[ ! "${_shld_parts[0]}" = 'Sheldon' ]]; then
     _error 'Invalid library'
   fi
 
   # We don't need the part with 'Sheldon'.
-  unset parts[0]
+  unset _shld_parts[0]
 
-  # Move the file base name to `script`.
-  len="${#parts[@]}"
-  script="${parts[len]}"
-  unset parts[len]
+  # Move the file base name to `_shld_script`.
+  _shld_len="${#_shld_parts[@]}"
+  _shld_script="${_shld_parts[_shld_len]}"
+  unset _shld_parts[_shld_len]
 
   # Join the parts and convert them to lower case.
-  Sheldon.Util.Array.implode =path '/' parts
-  path="${path,,}"
+  Sheldon.Util.Array.implode =_shld_path '/' _shld_parts
+  _shld_path="${_shld_path,,}"
 
   # Append the file base name and the extension.
-  path="${path}/${script}.sh"
+  _shld_path="${_shld_path}/${_shld_script}.sh"
 
-  . "${Sheldon[dir]}/${path}"
+  . "${Sheldon[dir]}/${_shld_path}"
 }
