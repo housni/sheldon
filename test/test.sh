@@ -9,39 +9,28 @@
 # Run ArrayTest.testFirst
 #  ./test.sh ArrayTest.testFirst
 
-
 BASE_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 
 . "$BASE_DIR/../meemaw.sh"
 set +o errtrace
 
-# set -x
-
-use Sheldon.Test.TestFrameworkInAFile as Test
+import Sheldon.Test.TestFrameworkInAFile as Test
 
 # Path to test file.
 declare testFile
-
 declare allTestFiles
-
 # Basename of test file, $testFile.
 declare testFilename
 declare parsedFilename
-
 declare testOutput
-
 declare testNamespace
 declare testFunc
 declare parsedFunc
 
-# shopt -s nullglob
-
 $Test.header "Testing"
 
 allTestFiles="$(realpath $BASE_DIR/../tests/*.sh)"
-for testFile in $allTestFiles
-do
-
+for testFile in $allTestFiles; do
   testFilename="$(basename ${testFile} .sh)"
 
   # If a test file is specified, then run only that and skip the others.
@@ -61,16 +50,15 @@ do
   $Test.bold "\nFile: ${testFile}"
 
   . "${testFile}"
-
   if [ "$(type -t $testFilename.setUp)" = 'function' ]; then
     $testFilename.setUp
   fi
 
-  for testOutput in `declare -F`
-  do
+  for testOutput in `declare -F`; do
     testNamespace=${testOutput%.*}
     testFunc=${testOutput#*.}
 
+    # TODO: If function doesn't exist, show error.
     # If we have assigned parsedFunc earlier, that means a specific function
     # name was passed in as a param, so we only allow that function to run.
     if [ ! -z "$parsedFunc" ] && [ "$testFunc" != "$parsedFunc" ]; then
