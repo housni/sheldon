@@ -37,115 +37,52 @@ Sheldon[root]="$(cd "$(dirname "${Sheldon[dir]}")" && pwd)"
 Sheldon[file]="${Sheldon[dir]}/$(basename "${BASH_SOURCE[0]}")"
 Sheldon[base]="$(basename ${Sheldon[file]} .sh)"
 
+SHELDON_LOG_LEVEL=1
 
-################################################################################
-# Assigns the value in $2 to the value of $1.
-# $1 should be the name of the variable, prefixed with '=', that is passed into
-# the parent function. _assign() will eval the value of $1 and assign $2 to it
-# which would be an actual value.
-# It's important that $1 is prefixed with a '=' or no assignation will take place.
+# Logs text to screen with formatting to make it easier to catch in the midst
+# of a lot of output.
 #
-# This must be used in every Sheldon script that wishes to assign value to a
-# variable inside a function and have that be visible outside the scope of the
-# function. We use this so that the user can control the name of the variable
-# and not pollute the variable namespace.
+#   SHELDON_LOG_LEVEL=1
+#   declare -a SHELDON_LOG_ARGS
+#   SHELDON_LOG_ARGS=(
+#       3         # Top/bottom padding of 3 lines
+#       "@@@   "  # Prepend characters
+#       "   @@@"  # Postpend characters
+#   )
+#   _log "Doing task X" "${SHELDON_LOG_ARGS[@]}"
 #
-# Not ideal but this is the best you can do with Bash, I suppose.
-#
-# ### Usage
-#
-# ```
-#   Sheldon.add() {
-#     calculated=$(($2 + $3))
-#     _assign "$1" "${calculated}"
-#   }
-#
-#   declare SUM
-#
-#   Sheldon.add =SUM 4 5
-#   echo "${SUM}" # will yield '9'
-# ```
-# If you want to, you can directly assign the value to the second parameter of
-# _assign(), inside add(), like this:
-# ```
-#   _assign "$1" "$(($2 + $3))"
-# ```
-#
-# @param string $1
-#     The name of the variable you want to assign $2 to. This is typically
-#     passed in from the code written by the user. Sheldon simply handles it.
-# @param string $2
-#     The value you want to assign to the variable named held in $1.
-################################################################################
-_assign() {
-  if [[ "$1" = =* ]]; then
-    local name
-    name="${1:1}"
+# $1 (string, required) The text to display.
+# $2 (integer, optional, default=0) The 'padding' above and below $1.
+# $3 (string, optional, default="") This will 'prepend' $1.
+# $4 (string, optional, default="") This will 'postpend' $1.
+_log() {
+    if [[ $SHELDON_LOG_LEVEL -eq 0 ]]; then
+        return
+    fi
 
-    eval "$name=(\"\$2\")"
-  fi
+    local -i padding
+    local prepend
+    local postpend
+    local -i first
+    local -i counter
+
+    padding=${2:-0}
+    prepend=${3:-""}
+    postpend=${4:-""}
+    first=$(( padding + 1 ))
+
+    for((counter=1;counter<=first;counter++)); do
+        if [[ $first -eq $counter ]]; then
+            echo -e "${prepend}$1${postpend}"
+        else
+            echo
+        fi
+    done
+
+    for((counter=1;counter<=padding;counter++)); do
+        echo
+    done
 }
-
-
-####################################################################a############
-# Assigns the elements of the array in $2 to the value of $1.
-# $1 should be the name of the variable, prefixed with '=', that is passed into
-# the parent function. _assign[]() will eval the value of $1 and assign all the
-# elements of the array in $2 to it.
-# It's important that $1 is prefixed with a '=' or no assignation will take place.
-#
-# This must be used in every Sheldon script that wishes to assign an array to a
-# variable inside a function and have that be visible outside the scope of the
-# function. We use this so that the user can control the name of the variable
-# and not pollute the variable namespace.
-#
-# Not ideal but this is the best you can do with Bash, I suppose.
-#
-# ### Usage
-#
-# ```
-#   Sheldon.append() {
-#     local -n array1
-#     local -n array2
-#     local appended
-#
-#     array1="$2"
-#     array2="$3"
-#
-#     appended=( "${array1[@]}" "${array2[@]}" )
-#
-#     _assign[] "$1" "${appended[@]}"
-#   }
-#
-#   declare CAST
-#   declare -a girls
-#   declare -a guys
-#
-#   girls=( Penny Bernadette Amy )
-#   guys=( Sheldon Leonard Howard Raj )
-#
-#   Sheldon.append =CAST girls guys
-#   echo "${CAST[@]}" # yields 'Penny Bernadette Amy Sheldon Leonard Howard Raj'
-# ```
-#
-# @param string $1
-#     The name of the variable you want to assign $2 to. This is typically
-#     passed in from the code written by the user. Sheldon simply handles it.
-# @param array $2
-#     The array you want to assign to the variable named held in $1.
-################################################################################
-_assign[]() {
-  if [[ "$1" = =* ]]; then
-    local name
-    local -n array
-
-    name="${1:1}"
-    array="$2"
-
-    eval "$name=(\"\${array[@]}\")"
-  fi
-}
-
 
 ################################################################################
 # Displays an error message and the optional line number, file name and exit
@@ -244,7 +181,7 @@ _error() {
 # You can load a script the default way but you'd have to use the entire
 # namespace when you want to use its functions:
 # ```
-# use Sheldon.Storage.Registry
+# import Sheldon.Storage.Registry
 #
 # Sheldon.Storage.Registry.set 'name' 'Sheldon'
 # Sheldon.Storage.Registry.set 'has' 'Eidetic memory'
@@ -256,7 +193,7 @@ _error() {
 # not the same as an alias in Bash). Then, the alias becomes a variable which
 # you can use to access functions with:
 # ```
-# use Sheldon.Storage.Registry as Registry
+# import Sheldon.Storage.Registry as Registry
 #
 # $Registry.set 'who' 'Sheldon'
 # $Registry.set 'has' 'Eidetic memory'
@@ -276,7 +213,7 @@ _error() {
 # @param string $3 optional
 #     The name of the alias.
 ################################################################################
-use() {
+import() {
   Sheldon.Core.Libraries.load "${1}"
 
   # If a third param is present, treat it as an alias.
@@ -328,3 +265,7 @@ for sig in INT TERM EXIT; do
     trap "[[ $sig == EXIT ]] || kill -$sig $BASHPID" $sig
 done
 trap _error ERR
+
+# Make debugging easier
+# See: http://wiki.bash-hackers.org/scripting/debuggingtips#making_xtrace_more_useful
+export PS4='+(${BASH_SOURCE}:${LINENO}): ${FUNCNAME[0]:+${FUNCNAME[0]}(): }'

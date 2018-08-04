@@ -1,5 +1,5 @@
 StringTest.setUp() {
-  use Sheldon.Util.String as String
+  import Sheldon.Util.String as String
 }
 
 StringTest.tearDown() {
@@ -7,22 +7,22 @@ StringTest.tearDown() {
 }
 
 
-StringTest.testExplode() {
+StringTest.testSplit() {
   local result
   local expected
   local args
 
   expected=( var www html )
-  $String.explode =result '/' '/var/www/html'
-  $Test.array_diff =args result expected
-  $Test.it 'String.explode: Should pass if a string is exploded correctly.' <<EOF
+  result=( $($String.split '/' '/var/www/html') )
+  args=$($Test.array_diff result expected)
+  $Test.it 'Should pass if a string is split correctly.' <<EOF
     [ -z "$args" ]
 EOF
 
   expected=( Sheldon Leonard Howard Raj )
-  $String.explode =result '*' 'Sheldon * Leonard * Howard * Raj'
-  $Test.array_diff =args result expected
-  $Test.it 'String.explode: Should pass if a literal asterisk is escaped on explode.' <<EOF
+  result=( $($String.split '*' 'Sheldon * Leonard * Howard * Raj') )
+  args=$($Test.array_diff result expected)
+  $Test.it 'Should pass if a literal asterisk is escaped on split.' <<EOF
     [ -z "$args" ]
 EOF
 }
@@ -33,38 +33,38 @@ StringTest.testJoin() {
   local expected
 
   expected='Sheldon % Leonard % Howard % Raj'
-  $String.join =result ' % ' Sheldon Leonard Howard Raj
-  $Test.it "String.join: Should pass with literal '%' as the glue." <<EOF
+  result=$($String.join ' % ' Sheldon Leonard Howard Raj)
+  $Test.it "Should pass with literal '%' as the glue." <<EOF
     [ "$result" = "$expected" ]
 EOF
 
   expected='Sheldon %% Leonard %% Howard %% Raj'
-  $String.join =result ' %% ' Sheldon Leonard Howard Raj
-  $Test.it "String.join: Should pass with two literal '%' as the glue." <<EOF
+  result=$($String.join ' %% ' Sheldon Leonard Howard Raj)
+  $Test.it "Should pass with two literal '%' as the glue." <<EOF
     [ "$result" = "$expected" ]
 EOF
 
   expected='Amy & Sheldon'
-  $String.join =result ' & ' Amy Sheldon
-  $Test.it 'String.join: Should pass with literal & as the glue.' <<EOF
+  result=$($String.join ' & ' Amy Sheldon)
+  $Test.it 'Should pass with literal & as the glue.' <<EOF
     [ "$result" = "$expected" ]
 EOF
 
   expected='Amy  Sheldon'
-  $String.join =result '  ' Amy Sheldon
-  $Test.it 'String.join: Should pass with two spaces as the glue.' <<EOF
+  result=$($String.join '  ' Amy Sheldon)
+  $Test.it 'Should pass with two spaces as the glue.' <<EOF
     [ "$result" = "$expected" ]
 EOF
 
   expected='Sheldon/Leonard/Howard/Raj'
-  $String.join =result '/' Sheldon Leonard Howard Raj
-  $Test.it 'String.join: Should pass without spaces around glue.' <<EOF
+  result=$($String.join '/' Sheldon Leonard Howard Raj)
+  $Test.it 'Should pass without spaces around glue.' <<EOF
     [ "$result" = "$expected" ]
 EOF
 
   expected='Sheldon'
-  $String.join =result ' & ' Sheldon
-  $Test.it 'String.join: Should pass if a single arg simply returns the arg itself.' <<EOF
+  result=$($String.join ' & ' Sheldon)
+  $Test.it 'Should pass if a single arg simply returns the arg itself.' <<EOF
     [ "$result" = "$expected" ]
 EOF
 }
@@ -75,38 +75,145 @@ StringTest.testInsert() {
   local expected
   local -A data
   local template
+  local -A options
 
   data=(
-   ['who']='Housni'
-   ['domain']='housni.org'
-   ['filename']='backup.sql'
+    ['who']='Housni'
+    ['domain']='housni.org'
+    ['filename']='backup.sql'
   );
 
   template='/var/www/{:who}/{:domain}/backup/database/{:filename}'
   expected='/var/www/Housni/housni.org/backup/database/backup.sql'
-  $String.insert =result "$template" data
-  $Test.it 'String.insert: Should pass placeholders are replaced properly.' <<EOF
+  result=$($String.insert "$template" data)
+  $Test.it 'Should pass if placeholders are replaced properly.' <<EOF
     [ "$result" = "$expected" ]
 EOF
 
+  options=(
+    ['before']='<?'
+    ['after']='?>'
+  )
   template='/var/www/<?who?>/<?domain?>/backup/database/<?filename?>'
   expected='/var/www/Housni/housni.org/backup/database/backup.sql'
-  $String.insert =result "$template" data -b '<?' -a '?>'
-  $Test.it 'String.insert: Should pass if custom before and after string for placeholders work.' <<EOF
+  result=$($String.insert "$template" data options)
+  $Test.it 'Should pass if custom before and after string for placeholders work.' <<EOF
     [ "$result" = "$expected" ]
 EOF
 
+  options=(
+    ['before']='<?'
+  )
   template='/var/www/<?who}/<?domain}/backup/database/<?filename}'
   expected='/var/www/Housni/housni.org/backup/database/backup.sql'
-  $String.insert =result "$template" data -b '<?'
-  $Test.it 'String.insert: Should pass if custom before string for placeholders work.' <<EOF
+  result=$($String.insert "$template" data options)
+  $Test.it 'Should pass if custom before string for placeholders work.' <<EOF
     [ "$result" = "$expected" ]
 EOF
 
+  options=(
+    ['after']=']'
+  )
   template='/var/www/{:who]/{:domain]/backup/database/{:filename]'
   expected='/var/www/Housni/housni.org/backup/database/backup.sql'
-  $String.insert =result "$template" data -a ']'
-  $Test.it 'String.insert: Should pass if custom after string for placeholders work.' <<EOF
+  result=$($String.insert "$template" data options)
+  $Test.it 'Should pass if custom after string for placeholders work.' <<EOF
+    [ "$result" = "$expected" ]
+EOF
+}
+
+StringTest.testLower() {
+  local expected
+  local result
+
+  expected='bazinga!'
+  result=$($String.lower "BAZINGA!")
+  $Test.it 'Should pass if text is lower case.' <<EOF
+    [ "$result" = "$expected" ]
+EOF
+
+  expected='BaZiNGa!'
+  result=$($String.lower "BAZINGA!" AEIOU)
+  $Test.it 'Should pass if only vowels are lower case.' <<EOF
+    [ "$result" = "$expected" ]
+EOF
+}
+
+StringTest.testUpper() {
+  local expected
+  local result
+
+  expected='BAZINGA!'
+  result=$($String.upper "bazinga!")
+  $Test.it 'Should pass if text is upper case.' <<EOF
+    [ "$result" = "$expected" ]
+EOF
+
+  expected='bAzIngA!'
+  result=$($String.upper "bazinga!" aeiou)
+  $Test.it 'Should pass if only vowels are upper case.' <<EOF
+    [ "$result" = "$expected" ]
+EOF
+}
+
+StringTest.testSwapcase() {
+  local expected
+  local result
+
+  expected="I am one with The Force"
+  result=$($String.swapcase "i AM ONE WITH tHE fORCE")
+  $Test.it 'Should pass if text case is toggled.' <<EOF
+    [ "$result" = "$expected" ]
+EOF
+
+  expected="I am one with The Force"
+  result=$($String.swapcase "i AM ONE WITH tHE fORCE")
+  $Test.it 'Should pass if text case is toggled.' <<EOF
+    [ "$result" = "$expected" ]
+EOF
+}
+
+StringTest.testCapitalize() {
+  local expected
+  local result
+
+  expected="I am one with The Force"
+  result=$($String.capitalize "i am one with The Force")
+  $Test.it 'Should pass if the first letter is upper case.' <<EOF
+    [ "$result" = "$expected" ]
+EOF
+
+  expected="I am one with The Force"
+  result=$($String.capitalize "I am one with The Force")
+  $Test.it 'Should pass if the first letter remains upper case.' <<EOF
+    [ "$result" = "$expected" ]
+EOF
+}
+
+StringTest.testTitle() {
+  local expected
+  local result
+
+  expected="I Am One With The Force"
+  result=$($String.title "I am one with The Force")
+  $Test.it 'Should pass if the first letter of each word is upper case.' <<EOF
+    [ "$result" = "$expected" ]
+EOF
+
+  expected="I Am One With The Force"
+  result=$($String.title "i am one with the force")
+  $Test.it 'Should pass if the first letter of each word is upper case.' <<EOF
+    [ "$result" = "$expected" ]
+EOF
+}
+
+StringTest.testLength() {
+  local -i expected
+  local -i result
+
+  expected=8
+  result=$($String.length "Bazinga!")
+  $Test.it 'Should pass if the lenth of the word $epxected characters long.' <<EOF
     [ "$result" = "$expected" ]
 EOF
 }

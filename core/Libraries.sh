@@ -29,7 +29,7 @@
 # Sheldon.Core.Libraries.load  "Sheldon.Util.String" ".".
 # ```
 #
-# @see use()
+# @see import()
 # @param string $1
 #     The namespace (as it were) of the file you want to source.
 # @param string $2 optional
@@ -63,11 +63,12 @@ Sheldon.Core.Libraries.load() {
   unset _shld_parts[_shld_len]
 
   # Join the parts and convert them to lower case.
-  Sheldon.Util.Array.implode =_shld_path '/' _shld_parts
+  _shld_path=$(Sheldon.Util.Array.implode '/' _shld_parts)
   _shld_path="${_shld_path,,}"
 
   # Append the file base name and the extension.
   _shld_path="${_shld_path}/${_shld_script}.sh"
 
+  # TODO: Make sure the file is sourced only once in a shell.
   . "${Sheldon[dir]}/${_shld_path}"
 }

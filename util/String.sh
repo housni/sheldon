@@ -32,11 +32,11 @@
 ## @skip testExplode
 ## @until }
 ################################################################################
-Sheldon.Util.String.explode() {
-  local -a _shld_parts
-  _shld_parts=(${3//"$2"/ })
+Sheldon.Util.String.split() {
+  local -a parts
+  parts=( ${2//"$1"/ } )
 
-  _assign[] "$1" _shld_parts
+  echo "${parts[@]}"
 }
 
 
@@ -61,27 +61,24 @@ Sheldon.Util.String.explode() {
 ## @until }
 ################################################################################
 Sheldon.Util.String.join() {
-  local _shld_assign
-  local _shld_trim
-  local _shld_glue
-  local _shld_joined
+  local trim
+  local glue
+  local joined
 
-  _shld_glue="$2"
-  _shld_assign="$1"
-  _shld_trim="${#_shld_glue}"
+  glue="$1"
+  trim="${#glue}"
 
-  if [[ "$_shld_glue" == *"%"* ]]
-  then
+  if [[ "$glue" == *"%"* ]]; then
     # We need to escape '%' since we are using printf.
-    _shld_glue=${_shld_glue//%/%%}
+    glue=${glue//%/%%}
   fi
 
-  shift 2
+  shift 1
 
-  _shld_joined="$( printf "${_shld_glue}%s" "$@" )"
-  _shld_joined="${_shld_joined:$_shld_trim}"
+  joined="$( printf "${glue}%s" "$@" )"
+  joined="${joined:$trim}"
 
-  _assign "$_shld_assign" "$_shld_joined"
+  echo "$joined"
 }
 
 
@@ -94,7 +91,7 @@ Sheldon.Util.String.join() {
 # By default, the placeholder keys must be of the form `{:my_placeholder}`.
 # <pre>
 # @textblock
-# use Sheldon.Util.String as String
+# import Sheldon.Util.String as String
 #
 # declare result
 # declare template
@@ -142,39 +139,57 @@ Sheldon.Util.String.join() {
 # */
 ################################################################################
 Sheldon.Util.String.insert() {
-  local _shld_str
-  local -n _shld_data
-  local _shld_before
-  local _shld_after
-  local _shld_index
-  local OPTIND
+  local template
+  local -n __shld_data
+  local datum
+  local -A defaults
 
-  _shld_before='{:'
-  _shld_after='}'
-  _shld_index=''
+  defaults=( ['before']='{:' ['after']='}' )
+  if [[ ! -z $3 ]]; then
+    import Sheldon.Util.Array as Array
+    $Array.update defaults ${3}
+  fi
 
-  # Allow options to be passed in after non-option params.
-  OPTIND=4
-
-  # Overwrite with values that are passed in.
-  while getopts "a:b:" _shld_index; do
-    case "$_shld_index" in
-      a)
-        _shld_after="${OPTARG}"
-        ;;
-
-      b)
-        _shld_before="${OPTARG}"
-        ;;
-    esac
+  template="$1"
+  __shld_data="$2"
+  for datum in "${!__shld_data[@]}"; do
+    template=${template//"${defaults['before']}""${datum}""${defaults['after']}"/"${__shld_data[$datum]}"}
   done
-  _shld_index=''
+  echo "$template"
+}
 
-  _shld_str="$2"
-  _shld_data="$3"
-  for _shld_index in "${!_shld_data[@]}"; do
-    _shld_str=${_shld_str//"${_shld_before}""${_shld_index}""${_shld_after}"/"${_shld_data[$_shld_index]}"}
-  done
+# See: https://stackoverflow.com/a/2265268/379786
+Sheldon.Util.String.lower() {
+  if [[ ! -z "$2" ]]; then
+    echo "${1,,[$2]}"
+  else
+    echo "${1,,}"
+  fi
+}
 
-  _assign "$1" "$_shld_str"
+Sheldon.Util.String.upper() {
+  if [[ ! -z "$2" ]]; then
+    echo "${1^^[$2]}"
+  else
+    echo "${1^^}"
+  fi
+}
+
+Sheldon.Util.String.capitalize() {
+  echo "${1^}"
+}
+
+Sheldon.Util.String.swapcase() {
+  echo "${1~~}"
+}
+
+Sheldon.Util.String.length() {
+  echo "${#1}"
+}
+
+Sheldon.Util.String.title() {
+  local -c input
+
+  input=( $1 )
+  echo "${input[@]^}"
 }

@@ -6,7 +6,7 @@
 # ### Usage
 #
 # ```
-# use Sheldon.Storage.Registry as Registry
+# import Sheldon.Storage.Registry as Registry
 # declare WHO
 # declare LOVES
 # $Registry.set 'who' 'Sheldon'
