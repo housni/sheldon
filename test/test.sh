@@ -14,7 +14,6 @@ BASE_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 # shellcheck disable=SC1090
 . "$BASE_DIR/../meemaw.sh"
 set +o errtrace
-set -x
 
 import Sheldon.Test.TestFrameworkInAFile as Test
 
