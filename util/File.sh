@@ -1,59 +1,41 @@
+#!/usr/bin/env bash
+
 Sheldon.Util.File.exists?() {
-  local _shld_assign
-
-  _shld_assign="$1"
-
-  if [ -e "${2}" ]; then
-    _assign "$_shld_assign" 'true'
+  if [[ -e "${1}" ]]; then
+    echo 0
   else
-    _assign "$_shld_assign" 'false'
+    echo 1
   fi
 }
 
 Sheldon.Util.File.isDir?() {
-  local _shld_assign
-
-  _shld_assign="$1"
-
-  if [ -d "${2}" ]; then
-    _assign "$_shld_assign" 'true'
+  if [[ -d "${1}" ]]; then
+    echo 0
   else
-    _assign "$_shld_assign" 'false'
+    echo 1
   fi
 }
 
 Sheldon.Util.File.isFile?() {
-  local _shld_assign
-
-  _shld_assign="$1"
-
-  if [ -f "${2}" ]; then
-    _assign "$_shld_assign" 'true'
+  if [[ -f "${1}" ]]; then
+    echo 0
   else
-    _assign "$_shld_assign" 'false'
+    echo 1
   fi
 }
 
 Sheldon.Util.File.isLink?() {
-  local _shld_assign
-
-  _shld_assign="$1"
-
-  if [ -L "${2}" ]; then
-    _assign "$_shld_assign" 'true'
+  if [[ -L "${1}" ]]; then
+    echo 0
   else
-    _assign "$_shld_assign" 'false'
+    echo 1
   fi
 }
 
 Sheldon.Util.File.isPipe?() {
-  local _shld_assign
-
-  _shld_assign="$1"
-
-  if [ -p "${2}" ]; then
-    _assign "$_shld_assign" 'true'
+  if [[ -p "${1}" ]]; then
+    echo 0
   else
-    _assign "$_shld_assign" 'false'
+    echo 1
   fi
 }

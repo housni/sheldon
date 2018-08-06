@@ -9,12 +9,12 @@
 ################################################################################
 
 # Version check.
-# Sheldon has only been tested on 4.3.30(1)-release
+# Sheldon is only supported on bash 4.3
 # We are assuming that the shell is Bash, though.
 [[ ${BASH_VERSION} =~ ([^\.]).([^\.])* ]]
-if [[ ${BASH_REMATCH[1]} < 4
-   || ${BASH_REMATCH[1]} = 4 && ${BASH_REMATCH[2]} < 3 ]]; then
-  echo "WARNING: Sheldon has only been tested with Bash 4.3* but you are" \
+if [[ ${BASH_REMATCH[1]} -lt 4
+   || ${BASH_REMATCH[1]} -eq 4 && ${BASH_REMATCH[2]} -lt 3 ]]; then
+  echo "WARNING: Sheldon is only supported on bash 4.3 and you are" \
        "using version ${BASH_VERSION}"
 fi
 
@@ -35,7 +35,7 @@ Sheldon[register]=
 Sheldon[dir]="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 Sheldon[root]="$(cd "$(dirname "${Sheldon[dir]}")" && pwd)"
 Sheldon[file]="${Sheldon[dir]}/$(basename "${BASH_SOURCE[0]}")"
-Sheldon[base]="$(basename ${Sheldon[file]} .sh)"
+Sheldon[base]=$(basename "${Sheldon[file]}" .sh)
 
 SHELDON_LOG_LEVEL=1
 
@@ -143,29 +143,30 @@ _error() {
   case "$#" in
     0)
       # TODO: check for UTF-8 terminal before using Unicode.
-      printf "$(< "${Sheldon[dir]}/resources/templates/errors/0.tpl")"
+      printf "%b" "$(< "${Sheldon[dir]}/resources/templates/errors/0.tpl")"
       ;;
 
     1)
       string="$(< "${Sheldon[dir]}/resources/templates/errors/1.tpl")"
       placeholders=( ['message']="${1}" )
-      Sheldon.Util.String.insert =Sheldon_tmp "${string}" placeholders
-      printf "${Sheldon_tmp}"
+      Sheldon_tmp=$(Sheldon.Util.String.insert "${string}" placeholders)
+      printf "%s" "${Sheldon_tmp}"
       ;;
 
     3|4)
       string="$(< "${Sheldon[dir]}/resources/templates/errors/$#.tpl")"
+      # shellcheck disable=SC2034
       placeholders=( ['message']="${1}" ['line']="${2}" ['file']="${3}" )
-      Sheldon.Util.String.insert =Sheldon_tmp "${string}" placeholders
-      printf "${Sheldon_tmp}"
+      Sheldon_tmp=$(Sheldon.Util.String.insert "${string}" placeholders)
+      printf "%s" "${Sheldon_tmp}"
       ;;
 
     *)
       echo "Invalid number of arguments ($#) for '_error()'"
   esac
 
-  if [[ $# = 4 ]]; then
-    exit $4
+  if [[ $# -eq 4 ]]; then
+    exit "$4"
   fi
   exit 1
 }
@@ -257,12 +258,15 @@ command_not_found_handle() {
 
 
 # Source a few commonly used libraries.
+# shellcheck source=./core/Sheldon.sh
 . "${Sheldon[dir]}/core/Sheldon.sh"
+# shellcheck source=./core/Libraries.sh
 . "${Sheldon[dir]}/core/Libraries.sh"
 
 # Set the traps.
 for sig in INT TERM EXIT; do
-    trap "[[ $sig == EXIT ]] || kill -$sig $BASHPID" $sig
+  # shellcheck disable=SC2064
+  trap "[[ '$sig' == EXIT ]] || kill -'$sig' '$BASHPID'" $sig
 done
 trap _error ERR
 

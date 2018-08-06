@@ -1,3 +1,5 @@
+#!/usr/bin/env bash
+
 ################################################################################
 # Sheldon: The not-so-bashful Bash framework. Bazinga!
 #
@@ -8,7 +10,8 @@
 
 # For Library.sh, we have to manually source files since the function that
 # sources is defined below and it can't be used until it's defined.
-. ${Sheldon[dir]}/util/Array.sh
+# shellcheck source=/dev/null
+. "${Sheldon[dir]}"/util/Array.sh
 
 ################################################################################
 # Locates and sources the script based on $1. This function assumes the first
@@ -36,39 +39,39 @@
 #     The separator used in $_shld_namespace.
 ################################################################################
 Sheldon.Core.Libraries.load() {
-  local _shld_namespace
-  local _shld_separator
-  local _shld_path
-  local -a _shld_parts
-  local -i _shld_len
-  local _shld_script
+  local namespace
+  local separator
+  local path
+  local -a parts
+  local -i len
+  local script
 
-  _shld_namespace="${1}"
-  _shld_separator="${2:-.}"
+  namespace="${1}"
+  separator="${2:-.}"
 
   # TODO: Check for '*' and escape it.
-  _shld_parts=(${_shld_namespace//"$_shld_separator"/ })
+  parts=(${namespace//"$separator"/ })
 
   # Validate that we are using this for Sheldon libs.
-  if [[ ! "${_shld_parts[0]}" = 'Sheldon' ]]; then
+  if [[ ! "${parts[0]}" = 'Sheldon' ]]; then
     _error 'Invalid library'
   fi
 
   # We don't need the part with 'Sheldon'.
-  unset _shld_parts[0]
+  unset "parts[0]"
 
   # Move the file base name to `_shld_script`.
-  _shld_len="${#_shld_parts[@]}"
-  _shld_script="${_shld_parts[_shld_len]}"
-  unset _shld_parts[_shld_len]
+  len="${#parts[@]}"
+  script="${parts[len]}"
+  unset "parts[len]"
 
   # Join the parts and convert them to lower case.
-  _shld_path=$(Sheldon.Util.Array.implode '/' _shld_parts)
-  _shld_path="${_shld_path,,}"
+  path=$(Sheldon.Util.Array.implode '/' parts)
+  path="${path,,}"
 
   # Append the file base name and the extension.
-  _shld_path="${_shld_path}/${_shld_script}.sh"
+  path="${path}/${script}.sh"
 
   # TODO: Make sure the file is sourced only once in a shell.
-  . "${Sheldon[dir]}/${_shld_path}"
+  . "${Sheldon[dir]}/${path}"
 }

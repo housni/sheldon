@@ -1,122 +1,133 @@
+#!/usr/bin/env bash
+
 FileTest.setUp() {
-  use Sheldon.Util.File as File
+  import Sheldon.Util.File as File
 
   FILE_SHELDON_TEMP_FILE="$(mktemp)"
   FILE_SHELDON_TEMP_DIR="$(mktemp -d)"
   FILE_SHELDON_TEMP_SYMLINK="/tmp/FileTest.symlink.${RANDOM}"
-  $(ln -s $FILE_SHELDON_TEMP_FILE $FILE_SHELDON_TEMP_SYMLINK)
+  ln -s "${FILE_SHELDON_TEMP_FILE}" "${FILE_SHELDON_TEMP_SYMLINK}"
   FILE_SHELDON_TEMP_PIPE="/tmp/FileTest.pipe.${RANDOM}"
-  $(mknod $FILE_SHELDON_TEMP_PIPE p)
+  mknod $FILE_SHELDON_TEMP_PIPE p
 }
 
 FileTest.tearDown() {
   rm -rf "$FILE_SHELDON_TEMP_FILE" "$FILE_SHELDON_TEMP_DIR" "$FILE_SHELDON_TEMP_SYMLINK" "$FILE_SHELDON_TEMP_SOCKET"
 }
 
-
+# shellcheck disable=SC2154
+# shellcheck disable=SC2086
 FileTest.testExists?() {
   local result
-  local expected
+  local -i expected
   local arg
 
   arg="$FILE_SHELDON_TEMP_FILE"
-  expected='true'
-  $File.exists? =result "$arg"
+  expected=0
+  result=$($File.exists? "$arg")
   $Test.it 'File.exists?: Should pass if a file exists.' <<EOF
-    [ "$result" = "$expected" ]
+    [ "$result" -eq "$expected" ]
 EOF
 
   arg="$FILE_SHELDON_TEMP_DIR"
-  expected='true'
-  $File.exists? =result "$arg"
+  expected=0
+  result=$($File.exists? "$arg")
   $Test.it 'File.exists?: Should pass if a dir exists.' <<EOF
-    [ "$result" = "$expected" ]
+    [ "$result" -eq "$expected" ]
 EOF
 }
 
+# shellcheck disable=SC2154
+# shellcheck disable=SC2086
 FileTest.testIsDir?() {
   local result
   local expected
   local arg
 
   arg="$FILE_SHELDON_TEMP_FILE"
-  expected='false'
-  $File.isDir? =result "$arg"
-  $Test.it 'File.isDir?: Should pass if file is a regular file.' <<EOF
-    [ "$result" = "$expected" ]
+  expected=1
+  result=$($File.isDir? "$arg")
+  $Test.it 'File.isDir?: Should pass if file is not a dir.' <<EOF
+    [ "$result" -eq "$expected" ]
 EOF
 
   arg="$FILE_SHELDON_TEMP_DIR"
-  expected='true'
-  $File.isDir? =result "$arg"
+  expected=0
+  result=$($File.isDir? "$arg")
   $Test.it 'File.isDir?: Should pass if file is a dir.' <<EOF
-    [ "$result" = "$expected" ]
+    [ "$result" -eq "$expected" ]
 EOF
 }
 
+# shellcheck disable=SC2154
+# shellcheck disable=SC2086
 FileTest.testIsFile?() {
   local result
   local expected
   local arg
 
   arg="$FILE_SHELDON_TEMP_FILE"
-  expected='true'
-  $File.isFile? =result "$arg"
+  expected=0
+  result=$($File.isFile? "$arg")
   $Test.it 'File.isFile?: Should pass if file is a regular file.' <<EOF
-    [ "$result" = "$expected" ]
+    [ "$result" -eq "$expected" ]
 EOF
 
   arg="$FILE_SHELDON_TEMP_DIR"
-  expected='false'
-  $File.isFile? =result "$arg"
+  expected=1
+  result=$($File.isFile? "$arg")
   $Test.it 'File.isFile?: Should pass if file is a dir.' <<EOF
-    [ "$result" = "$expected" ]
+    [ "$result" -eq "$expected" ]
 EOF
 }
 
+# shellcheck disable=SC2154
+# shellcheck disable=SC2086
 FileTest.testIsLink?() {
   local result
   local expected
   local arg
 
   arg="$FILE_SHELDON_TEMP_SYMLINK"
-  expected='true'
-  $File.isLink? =result "$arg"
+  expected=0
+  result=$($File.isLink? "$arg")
   $Test.it 'File.isLink?: Should pass if file is a symlink.' <<EOF
-    [ "$result" = "$expected" ]
+    [ "$result" -eq "$expected" ]
 EOF
 
   arg="$FILE_SHELDON_TEMP_DIR"
-  expected='false'
-  $File.isLink? =result "$arg"
+  expected=1
+  result=$($File.isLink? "$arg")
   $Test.it 'File.isLink?: Should pass if file is a dir.' <<EOF
-    [ "$result" = "$expected" ]
+    [[ "$result" -eq "$expected" ]]
 EOF
 
   arg="$FILE_SHELDON_TEMP_FILE"
-  expected='false'
-  $File.isLink? =result "$arg"
+  expected=1
+  result=$($File.isLink? "$arg")
   $Test.it 'File.isLink?: Should pass if file is a regular file.' <<EOF
-    [ "$result" = "$expected" ]
+    [[ "$result" -eq "$expected" ]]
 EOF
 }
 
+# shellcheck disable=SC2154
+# shellcheck disable=SC2086
 FileTest.testIsPipe?() {
   local result
   local expected
   local arg
 
   arg="$FILE_SHELDON_TEMP_PIPE"
-  expected='true'
-  $File.isPipe? =result "$arg"
+  expected=0
+  result=$($File.isPipe? "$arg")
   $Test.it 'File.isPipe?: Should pass if file is a pipe.' <<EOF
-    [ "$result" = "$expected" ]
+    [[ "$result" -eq "$expected" ]]
 EOF
 
   arg="$FILE_SHELDON_TEMP_DIR"
-  expected='false'
-  $File.isPipe? =result "$arg"
+  expected=1
+  result=$($File.isPipe? "$arg")
   $Test.it 'File.isPipe?: Should pass if file is a dir.' <<EOF
-    [ "$result" = "$expected" ]
+    [ "$result" -eq "$expected" ]
 EOF
 }

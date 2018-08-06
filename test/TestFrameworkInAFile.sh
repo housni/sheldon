@@ -5,6 +5,7 @@
 # valid statement - this means an if condition, for example, should be written
 # on one line.
 ################################################################################
+# shellcheck disable=SC2086
 Sheldon.Test.TestFrameworkInAFile.it() {
   local message
   local line
@@ -49,7 +50,7 @@ Sheldon.Test.TestFrameworkInAFile.it() {
         _TESTPASS_="$(( _TESTPASS_ + 1 ))"
       fi
     fi
-  done < <($2)
+  done < <(cat $2)
   _SKIP_=
 }
 

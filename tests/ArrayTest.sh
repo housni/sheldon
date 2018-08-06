@@ -1,3 +1,5 @@
+#!/usr/bin/env bash
+
 ArrayTest.setUp() {
   import Sheldon.Util.Array as Array
 }
@@ -6,6 +8,8 @@ ArrayTest.tearDown() {
   :
 }
 
+# shellcheck disable=SC2086
+# shellcheck disable=SC2154
 ArrayTest.testPush() {
   local result
   local -a expected
@@ -28,6 +32,7 @@ EOF
 EOF
 }
 
+# shellcheck disable=SC2086
 ArrayTest.testPop() {
   local result
   local -a expected
@@ -37,21 +42,17 @@ ArrayTest.testPop() {
   args=( var www html )
   expected=( var www )
   popped=$($Array.pop args)
-  result=$($Test.array_diff args expected)
+  result=( $($Test.array_diff args expected) )
 
+  # shellcheck disable=SC2128
   $Test.it 'Should pass if an element is popped off the end of the array.' \
     skip 'This has not been implemented.' <<EOF
-      [ -z "$result" ]
-      [ "$popped" = 'html' ]
-EOF
-
-  $Test.it 'Should pass if an element is popped off the end of the array.' \
-    skip 'This has not been implemented.' <<EOF
-      [ -z "$result" ]
+      [ -z $result ]
       [ "$popped" = 'html' ]
 EOF
 }
 
+# shellcheck disable=SC2086
 ArrayTest.testUnshift() {
   local result
   local -a expected
@@ -67,6 +68,7 @@ ArrayTest.testUnshift() {
 EOF
 
   arg1=( Housni 'housni.org' public_html )
+  # shellcheck disable=SC2034
   arg2=( var www html )
   expected=( var www html Housni 'housni.org' public_html )
   $Array.unshift arg1 arg2
@@ -76,16 +78,19 @@ EOF
 EOF
 }
 
+# shellcheck disable=SC2086
 ArrayTest.testShift() {
   local result
   local -a expected
   local -a arg1
   local shifted
 
+  # shellcheck disable=SC2034
   arg1=( var www html )
   expected=( www html )
   shifted=$($Array.shift arg1)
-  result=$($Test.array_diff arg1 expected)
+  result=( $($Test.array_diff arg1 expected) )
+  # shellcheck disable=SC2128
   $Test.it 'Should pass if an element shifted.' \
     skip 'This has not been implemented.' <<EOF
       [ -z "$result" ]
@@ -93,6 +98,7 @@ ArrayTest.testShift() {
 EOF
 }
 
+# shellcheck disable=SC2086
 ArrayTest.testFirst() {
   local result
   local expected
@@ -106,6 +112,7 @@ ArrayTest.testFirst() {
 EOF
 }
 
+# shellcheck disable=SC2086
 ArrayTest.testLast() {
   local result
   local expected
@@ -119,6 +126,7 @@ ArrayTest.testLast() {
 EOF
 }
 
+# shellcheck disable=SC2086
 ArrayTest.testImplode() {
   local result
   local expected
@@ -138,6 +146,7 @@ EOF
     [ "$result" = "$expected" ]
 EOF
 
+  # shellcheck disable=SC2034
   args=(home housni Desktop)
   expected='home%housni%Desktop'
   result=$($Array.implode '%' args)
@@ -146,18 +155,20 @@ EOF
 EOF
 }
 
+# shellcheck disable=SC2086
 ArrayTest.testUpdate() {
   local -A expected
   local -A defaults
   local -A options
 
+  # shellcheck disable=SC2034
   defaults=( ["key1"]="val1" ["key2"]="val2" ["key3"]="val3" )
+  # shellcheck disable=SC2034
   options=(                  ["key2"]="custom value" )
   expected=( ["key1"]="val1" ["key2"]="custom value" ["key3"]="val3" )
   $Array.update defaults options
   difference=$($Test.array_diff defaults expected)
   $Test.it 'Should pass if custom array element overwrote the default one.' <<EOF
     [ -z "$difference" ]
-    [ "$defaults" = "$expected" ]
 EOF
 }

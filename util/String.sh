@@ -1,3 +1,5 @@
+#!/usr/bin/env bash
+
 ################################################################################
 # Sheldon: The not-so-bashful Bash framework. Bazinga!
 #
@@ -145,9 +147,11 @@ Sheldon.Util.String.insert() {
   local -A defaults
 
   defaults=( ['before']='{:' ['after']='}' )
-  if [[ ! -z $3 ]]; then
+  if [[ $# -gt 2 ]]; then
     import Sheldon.Util.Array as Array
-    $Array.update defaults ${3}
+    # shellcheck disable=SC2154
+    # shellcheck disable=SC2086
+    $Array.update defaults "${3}"
   fi
 
   template="$1"

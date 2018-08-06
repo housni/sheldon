@@ -1,3 +1,5 @@
+#!/usr/bin/env bash
+
 ################################################################################
 # Sheldon: The not-so-bashful Bash framework. Bazinga!
 #
@@ -60,9 +62,9 @@ Sheldon.Storage.Registry.set() {
 ################################################################################
 Sheldon.Storage.Registry.get() {
   # Making the variable uppercase on declaration.
-  local -u _shld_key
+  local -u key
 
   # Appending literal '=' because '_assign()' requires it.
-  _shld_key="=$1"
-  _assign "${_shld_key}" "${Sheldon["register.${1}"]}"
+  key="=$1"
+  _assign "${key}" "${Sheldon["register.${1}"]}"
 }

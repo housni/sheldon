@@ -1,3 +1,5 @@
+#!/usr/bin/env bash
+
 StringTest.setUp() {
   import Sheldon.Util.String as String
 }
@@ -6,7 +8,8 @@ StringTest.tearDown() {
   :
 }
 
-
+# shellcheck disable=SC2086
+# shellcheck disable=SC2154
 StringTest.testSplit() {
   local result
   local expected
@@ -27,7 +30,8 @@ EOF
 EOF
 }
 
-
+# shellcheck disable=SC2086
+# shellcheck disable=SC2154
 StringTest.testJoin() {
   local result
   local expected
@@ -69,7 +73,8 @@ EOF
 EOF
 }
 
-
+# shellcheck disable=SC2086
+# shellcheck disable=SC2154
 StringTest.testInsert() {
   local result
   local expected
@@ -77,6 +82,7 @@ StringTest.testInsert() {
   local template
   local -A options
 
+  # shellcheck disable=SC2034
   data=(
     ['who']='Housni'
     ['domain']='housni.org'
@@ -111,6 +117,7 @@ EOF
     [ "$result" = "$expected" ]
 EOF
 
+  # shellcheck disable=SC2034
   options=(
     ['after']=']'
   )
@@ -122,6 +129,8 @@ EOF
 EOF
 }
 
+# shellcheck disable=SC2086
+# shellcheck disable=SC2154
 StringTest.testLower() {
   local expected
   local result
@@ -139,6 +148,8 @@ EOF
 EOF
 }
 
+# shellcheck disable=SC2086
+# shellcheck disable=SC2154
 StringTest.testUpper() {
   local expected
   local result
@@ -156,6 +167,8 @@ EOF
 EOF
 }
 
+# shellcheck disable=SC2086
+# shellcheck disable=SC2154
 StringTest.testSwapcase() {
   local expected
   local result
@@ -173,6 +186,8 @@ EOF
 EOF
 }
 
+# shellcheck disable=SC2086
+# shellcheck disable=SC2154
 StringTest.testCapitalize() {
   local expected
   local result
@@ -190,6 +205,8 @@ EOF
 EOF
 }
 
+# shellcheck disable=SC2086
+# shellcheck disable=SC2154
 StringTest.testTitle() {
   local expected
   local result
@@ -207,13 +224,15 @@ EOF
 EOF
 }
 
+# shellcheck disable=SC2086
+# shellcheck disable=SC2154
 StringTest.testLength() {
   local -i expected
   local -i result
 
   expected=8
   result=$($String.length "Bazinga!")
-  $Test.it 'Should pass if the lenth of the word $epxected characters long.' <<EOF
+  $Test.it "Should pass if the lenth of the word $epxected characters long." <<EOF
     [ "$result" = "$expected" ]
 EOF
 }

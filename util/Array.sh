@@ -1,4 +1,4 @@
-
+#!/usr/bin/env bash
 
 # 1 = Array to push $2 info
 # 2... = Elements to push into $1
@@ -66,7 +66,7 @@ Sheldon.Util.Array.shift() {
   local first
 
   __shld_array="$1"
-  first="${__shld_array[@]:0:1}"
+  first="${__shld_array[*]:0:1}"
 
   # We need to modify the reference to the original array so we do it like this.
   __shld_array=( "${__shld_array[@]:1}" )
