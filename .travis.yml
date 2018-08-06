@@ -15,7 +15,7 @@ notifications:
 # install:
   # TODO: Install https://github.com/replicatedhq/dockerfilelint
 before_script:
-  - shellcheck {core,response,storage,test,tests,util}/*.sh meemaw.sh | less
+  - shellcheck {core,response,storage,test,tests,util}/*.sh meemaw.sh
   # - git clone --depth 1 https://github.com/replicatedhq/dockerfilelint.git ./dockerfilelint
   # - ./dockerfilelint/bin/dockerfilelint ./Dockerfile
 script:
