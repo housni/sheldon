@@ -33,7 +33,7 @@ declare parsedFunc
 # shellcheck disable=SC2086
 $Test.header "Testing"
 
-allTestFiles=$(realpath "$BASE_DIR"/../tests/*.sh)
+allTestFiles=$(readlink -f "$BASE_DIR"/../tests/*.sh)
 for testFile in $allTestFiles; do
   testFilename=$(basename "${testFile}" .sh)
 
