@@ -1,19 +1,24 @@
 .DEFAULT_GOAL := all
-FILES ?=
+LINT_FILES ?= $(shell find ./ -name '*.sh')
+TEST_NAMES ?=
 
 .PHONY: all
 all: build lint test
 
 .PHONY: build
 build:
-	docker build --rm -t sheldon:0.1 .
+	docker pull koalaman/shellcheck:stable
+	docker pull bash:4.3
 
 .PHONY: lint
-lint:
-	docker run --rm --name=sheldon-container -v $(CURDIR):/usr/lib/sheldon -w /usr/lib/sheldon -it sheldon:0.1 lint ${FILES}
+lint: shellcheck
+
+.PHONY: shellcheck
+shellcheck:
+	docker run -v "$(CURDIR):/usr/lib/sheldon" -w /usr/lib/sheldon koalaman/shellcheck:stable $(LINT_FILES)
 
 .PHONY: test
 test:
-	docker run --rm --name=sheldon-container -v $(CURDIR):/usr/lib/sheldon -w /usr/lib/sheldon -it sheldon:0.1 test ${FILES}
+	docker run -v "$(CURDIR):/usr/lib/sheldon" -w /usr/lib/sheldon bash:4.3 ./test/test.sh $(TEST_NAMES)
 
 gen-docs:
