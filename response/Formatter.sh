@@ -27,7 +27,7 @@ Sheldon.Response.Formatter.red() {
   before="$(tput bold)$(tput setaf 1)"
   after="$(tput sgr0)"
 
-  printf "%s%s%s\n" "${before}" "$1" "${after}"
+  printf "%s%s%s\\n" "${before}" "$1" "${after}"
 }
 
 Sheldon.Response.Formatter.green() {
@@ -37,7 +37,7 @@ Sheldon.Response.Formatter.green() {
   before="$(tput bold)$(tput setaf 2)"
   after="$(tput sgr0)"
 
-  printf "%s%s%s\n" "${before}" "$1" "${after}"
+  printf "%s%s%s\\n" "${before}" "$1" "${after}"
 }
 
 Sheldon.Response.Formatter.blue() {
@@ -47,5 +47,5 @@ Sheldon.Response.Formatter.blue() {
   before="$(tput bold)$(tput setaf 4)"
   after="$(tput sgr0)"
 
-  printf "%s%s%s\n" "${before}" "$1" "${after}"
+  printf "%s%s%s\\n" "${before}" "$1" "${after}"
 }

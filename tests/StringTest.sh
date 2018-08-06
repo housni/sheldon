@@ -16,14 +16,14 @@ StringTest.testSplit() {
   local args
 
   expected=( var www html )
-  result=( $($String.split '/' '/var/www/html') )
+  read -ra result <<< "$($String.split '/' '/var/www/html')"
   args=$($Test.array_diff result expected)
   $Test.it 'Should pass if a string is split correctly.' <<EOF
     [ -z "$args" ]
 EOF
 
   expected=( Sheldon Leonard Howard Raj )
-  result=( $($String.split '*' 'Sheldon * Leonard * Howard * Raj') )
+  read -ra result <<< "$($String.split '*' 'Sheldon * Leonard * Howard * Raj')"
   args=$($Test.array_diff result expected)
   $Test.it 'Should pass if a literal asterisk is escaped on split.' <<EOF
     [ -z "$args" ]

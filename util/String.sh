@@ -36,7 +36,7 @@
 ################################################################################
 Sheldon.Util.String.split() {
   local -a parts
-  parts=( ${2//"$1"/ } )
+  IFS=$"${1}" read -ra parts <<< "$2"
 
   echo "${parts[@]}"
 }
@@ -192,8 +192,7 @@ Sheldon.Util.String.length() {
 }
 
 Sheldon.Util.String.title() {
-  local -c input
-
-  input=( $1 )
+  local input
+  IFS=$" " read -ra input <<< "$1"
   echo "${input[@]^}"
 }

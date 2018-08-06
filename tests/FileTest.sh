@@ -24,6 +24,7 @@ FileTest.testExists?() {
 
   arg="$FILE_SHELDON_TEMP_FILE"
   expected=0
+  # shellcheck disable=SC2211
   result=$($File.exists? "$arg")
   $Test.it 'File.exists?: Should pass if a file exists.' <<EOF
     [ "$result" -eq "$expected" ]
@@ -31,6 +32,7 @@ EOF
 
   arg="$FILE_SHELDON_TEMP_DIR"
   expected=0
+  # shellcheck disable=SC2211
   result=$($File.exists? "$arg")
   $Test.it 'File.exists?: Should pass if a dir exists.' <<EOF
     [ "$result" -eq "$expected" ]
@@ -46,6 +48,7 @@ FileTest.testIsDir?() {
 
   arg="$FILE_SHELDON_TEMP_FILE"
   expected=1
+  # shellcheck disable=SC2211
   result=$($File.isDir? "$arg")
   $Test.it 'File.isDir?: Should pass if file is not a dir.' <<EOF
     [ "$result" -eq "$expected" ]
@@ -53,6 +56,7 @@ EOF
 
   arg="$FILE_SHELDON_TEMP_DIR"
   expected=0
+  # shellcheck disable=SC2211
   result=$($File.isDir? "$arg")
   $Test.it 'File.isDir?: Should pass if file is a dir.' <<EOF
     [ "$result" -eq "$expected" ]
@@ -68,6 +72,7 @@ FileTest.testIsFile?() {
 
   arg="$FILE_SHELDON_TEMP_FILE"
   expected=0
+  # shellcheck disable=SC2211
   result=$($File.isFile? "$arg")
   $Test.it 'File.isFile?: Should pass if file is a regular file.' <<EOF
     [ "$result" -eq "$expected" ]
@@ -75,6 +80,7 @@ EOF
 
   arg="$FILE_SHELDON_TEMP_DIR"
   expected=1
+  # shellcheck disable=SC2211
   result=$($File.isFile? "$arg")
   $Test.it 'File.isFile?: Should pass if file is a dir.' <<EOF
     [ "$result" -eq "$expected" ]
@@ -90,6 +96,7 @@ FileTest.testIsLink?() {
 
   arg="$FILE_SHELDON_TEMP_SYMLINK"
   expected=0
+  # shellcheck disable=SC2211
   result=$($File.isLink? "$arg")
   $Test.it 'File.isLink?: Should pass if file is a symlink.' <<EOF
     [ "$result" -eq "$expected" ]
@@ -97,6 +104,7 @@ EOF
 
   arg="$FILE_SHELDON_TEMP_DIR"
   expected=1
+  # shellcheck disable=SC2211
   result=$($File.isLink? "$arg")
   $Test.it 'File.isLink?: Should pass if file is a dir.' <<EOF
     [[ "$result" -eq "$expected" ]]
@@ -104,6 +112,7 @@ EOF
 
   arg="$FILE_SHELDON_TEMP_FILE"
   expected=1
+  # shellcheck disable=SC2211
   result=$($File.isLink? "$arg")
   $Test.it 'File.isLink?: Should pass if file is a regular file.' <<EOF
     [[ "$result" -eq "$expected" ]]
@@ -119,6 +128,7 @@ FileTest.testIsPipe?() {
 
   arg="$FILE_SHELDON_TEMP_PIPE"
   expected=0
+  # shellcheck disable=SC2211
   result=$($File.isPipe? "$arg")
   $Test.it 'File.isPipe?: Should pass if file is a pipe.' <<EOF
     [[ "$result" -eq "$expected" ]]
@@ -126,6 +136,7 @@ EOF
 
   arg="$FILE_SHELDON_TEMP_DIR"
   expected=1
+  # shellcheck disable=SC2211
   result=$($File.isPipe? "$arg")
   $Test.it 'File.isPipe?: Should pass if file is a dir.' <<EOF
     [ "$result" -eq "$expected" ]

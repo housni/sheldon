@@ -3,9 +3,9 @@ language: c
 os: linux
 git:
   depth: 1
-# sudo: required
-# services:
-#   - docker
+sudo: required
+services:
+  - docker
 # branches:
 #   only:
 #       - /.*/

@@ -11,6 +11,7 @@
 # For Library.sh, we have to manually source files since the function that
 # sources is defined below and it can't be used until it's defined.
 # shellcheck source=/dev/null
+# shellcheck disable=SC2154
 . "${Sheldon[dir]}"/util/Array.sh
 
 ################################################################################
@@ -50,7 +51,7 @@ Sheldon.Core.Libraries.load() {
   separator="${2:-.}"
 
   # TODO: Check for '*' and escape it.
-  parts=(${namespace//"$separator"/ })
+  IFS=$"${separator}" read -ra parts <<< "$namespace"
 
   # Validate that we are using this for Sheldon libs.
   if [[ ! "${parts[0]}" = 'Sheldon' ]]; then

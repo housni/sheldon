@@ -17,16 +17,20 @@ ArrayTest.testPush() {
   local -a arg2
 
   arg1=( var www )
+  # shellcheck disable=SC2190
   expected=( var www html Housni 'housni.org' )
   $Array.push arg1 html Housni 'housni.org'
+  # shellcheck disable=SC2211
   $Test.it 'Should pass if elements are pushed with individual arguments.' <<EOF
     [[ 0 -eq $($Test.array_equal? arg1 expected) ]]
 EOF
 
   arg1=( var www )
   arg2=( html Housni 'housni.org' )
+  # shellcheck disable=SC2190
   expected=( var www html Housni 'housni.org' )
   $Array.push arg1 arg2
+  # shellcheck disable=SC2211
   $Test.it 'Should pass if elements are pushed with an array of arguments.' <<EOF
     [[ 0 -eq $($Test.array_equal? arg1 expected) ]]
 EOF
@@ -40,11 +44,10 @@ ArrayTest.testPop() {
   local popped
 
   args=( var www html )
+  # shellcheck disable=SC2190
   expected=( var www )
   popped=$($Array.pop args)
-  result=( $($Test.array_diff args expected) )
-
-  # shellcheck disable=SC2128
+  read -ra result <<< "$($Test.array_diff args expected)"
   $Test.it 'Should pass if an element is popped off the end of the array.' \
     skip 'This has not been implemented.' <<EOF
       [ -z $result ]
@@ -60,6 +63,7 @@ ArrayTest.testUnshift() {
   local -a arg2
 
   arg1=( Housni 'housni.org' public_html )
+  # shellcheck disable=SC2190
   expected=( var www html Housni 'housni.org' public_html )
   $Array.unshift arg1 var www html
   result=$($Test.array_diff arg1 expected)
@@ -70,6 +74,7 @@ EOF
   arg1=( Housni 'housni.org' public_html )
   # shellcheck disable=SC2034
   arg2=( var www html )
+  # shellcheck disable=SC2190
   expected=( var www html Housni 'housni.org' public_html )
   $Array.unshift arg1 arg2
   result=$($Test.array_diff arg1 expected)
@@ -87,10 +92,10 @@ ArrayTest.testShift() {
 
   # shellcheck disable=SC2034
   arg1=( var www html )
+  # shellcheck disable=SC2190
   expected=( www html )
   shifted=$($Array.shift arg1)
-  result=( $($Test.array_diff arg1 expected) )
-  # shellcheck disable=SC2128
+  read -ra result <<< "$($Test.array_diff arg1 expected)"
   $Test.it 'Should pass if an element shifted.' \
     skip 'This has not been implemented.' <<EOF
       [ -z "$result" ]

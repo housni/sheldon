@@ -27,22 +27,24 @@ declare testOutput
 declare testNamespace
 declare testFunc
 declare parsedFunc
+declare resolver
 
 # shellcheck disable=SC2154
 # shellcheck disable=SC2086
 $Test.header "Testing"
 
-allTestFiles=$(readlink -f "$BASE_DIR"/../tests/*.sh)
+resolver=$(command -v realpath) || "$(command -v readlink) -f"
+allTestFiles=$($resolver "$BASE_DIR"/../tests/*.sh)
+
 for testFile in $allTestFiles; do
   testFilename=$(basename "${testFile}" .sh)
-
   # If a test file is specified, then run only that and skip the others.
   if [ $# -gt 0 ]; then
     parsedFilename="$1"
     if [ "$1" != "${1/./}" ]; then
-        parsedArgs=(${1//"."/ })
-        parsedFilename=${parsedArgs[0]}
-        parsedFunc="${parsedArgs[${#parsedArgs[@]}-1]}"
+      IFS=$"." read -ra parsedArgs <<< "$1"
+      parsedFilename=${parsedArgs[0]}
+      parsedFunc="${parsedArgs[${#parsedArgs[@]}-1]}"
     fi
 
     if [ "$testFilename" != "$parsedFilename" ]; then
@@ -51,7 +53,7 @@ for testFile in $allTestFiles; do
   fi
 
   # shellcheck disable=SC2086
-  $Test.bold "\nFile: ${testFile}"
+  $Test.bold "\\nFile: ${testFile}"
 
   # shellcheck disable=SC1090
   . "${testFile}"
