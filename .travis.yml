@@ -3,6 +3,9 @@ language: c
 os: linux
 git:
   depth: 1
+# sudo: required
+# services:
+#   - docker
 # branches:
 #   only:
 #       - /.*/
@@ -12,12 +15,9 @@ notifications:
       - housni.yakoob@gmail.com
     on_success: never
     on_failure: change
-# install:
-  # TODO: Install https://github.com/replicatedhq/dockerfilelint
-before_script:
-  - shellcheck {core,response,storage,test,tests,util}/*.sh meemaw.sh
-  # - git clone --depth 1 https://github.com/replicatedhq/dockerfilelint.git ./dockerfilelint
-  # - ./dockerfilelint/bin/dockerfilelint ./Dockerfile
+before_install:
+  - make build
 script:
-  - ./test/test.sh
-  # TODO: generate docs: https://github.com/zdharma/zshelldoc
+  - make lint
+  - make test
+  # - make gen-docs
