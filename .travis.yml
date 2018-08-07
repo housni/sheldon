@@ -16,7 +16,7 @@ notifications:
     on_success: never
     on_failure: change
 before_install:
-  - make build
+  - make prepare
 script:
   - make lint
   - make test
