@@ -1,24 +1,52 @@
 .DEFAULT_GOAL := all
-LINT_FILES ?= $(shell find ./ -name '*.sh')
+
+# Default shell is bash.
+SHELL := /bin/bash
+
+# list of shell scripts to run against shellcheck.
+SHELLCHECK_FILES ?= $(shell find ./ -name '*.sh')
+
+# Name of test(s) to run.
 TEST_NAMES ?=
 
+# Docker executable.
+DOCKER ?= docker
+
+# Version of Bash to test against.
+BASH_VERSION ?= 4.3
+
+# Directory Sheldon will be mounted to in Docker.
+VOLUME ?= /usr/lib/sheldon
+
+# target: all - Run all targets.
 .PHONY: all
-all: build lint test
+all: prepare lint test
 
-.PHONY: build
-build:
-	docker pull koalaman/shellcheck:stable
-	docker pull bash:4.3
+# target: prepare - Prepare for lint/test targets by pulling Docker images.
+.PHONY: prepare
+prepare:
+	$(DOCKER) pull "koalaman/shellcheck:stable"
+	$(DOCKER) pull "bash:$(BASH_VERSION)"
 
+# target: lint - Run linters.
 .PHONY: lint
 lint: shellcheck
 
+# target: shellcheck - Run 'shellcheck' against *.sh files in a Docker container.
 .PHONY: shellcheck
 shellcheck:
-	docker run -v "$(CURDIR):/usr/lib/sheldon" -w /usr/lib/sheldon koalaman/shellcheck:stable $(LINT_FILES)
+	$(DOCKER) run -v "$(CURDIR):$(VOLUME)" -w "$(VOLUME)" "koalaman/shellcheck:stable" $(SHELLCHECK_FILES)
 
+# target: test - Run Sheldon unit tests in a Docker container.
 .PHONY: test
 test:
-	docker run -v "$(CURDIR):/usr/lib/sheldon" -w /usr/lib/sheldon bash:4.3 ./test/test.sh $(TEST_NAMES)
+	$(DOCKER) run -v "$(CURDIR):$(VOLUME)" -w "$(VOLUME)" "bash:$(BASH_VERSION)" ./test/test.sh $(TEST_NAMES)
 
-gen-docs:
+## target: gen-docs - Generate Sphinx docs.
+# gen-docs:
+# 	-rm -rf docs
+
+# target: help - Display callable targets.
+.PHONY: help
+help:
+	egrep "^# target:" [Mm]akefile

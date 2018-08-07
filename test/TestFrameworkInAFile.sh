@@ -38,6 +38,7 @@ Sheldon.Test.TestFrameworkInAFile.it() {
   fi
 
   while read -r line; do
+    # TODO: Perhaps use try/catch: http://wiki.bash-hackers.org/syntax/ccmd/grouping_plain#examples
     eval "$line"
     _status_="$?"
     if [ "$_SKIP_" != 'true' ]; then
