@@ -36,9 +36,9 @@ HELP_TARGET :=
 
 # Name of target for the banner.
 TARGET_NAME ?= 
-
 # Characters to use when drawing a header/banner.
 BANNER_CHAR ?= \#
+# The prefix, in the banner, before displaying the name of the target.
 BANNER_PREFIX ?= TARGET: 
 
 # Returns the length of any skill.
@@ -136,8 +136,8 @@ check.lint: check.lint.shellcheck check.lint.yamllint
 #     make check.lint.shellcheck
 #         Runs 'shellcheck' against all files.
 #
-#     make MOUNT_PATH="~/.local/bin/" check.lint.shellcheck
-#         Mounts Sheldon to '~/.local/bin/' in the Docker container and runs
+#     make MOUNT_PATH="/usr/lib/sheldon/" check.lint.shellcheck
+#         Mounts Sheldon to '/usr/lib/sheldon/' in the Docker container and runs
 #         'shellcheck' against all files ending with '.sh' in that directory.
 #
 #     make SHELLCHECK_FILES="./core/Sheldon.sh ./util/String.sh" check.lint.shellcheck
@@ -146,8 +146,8 @@ check.lint: check.lint.shellcheck check.lint.yamllint
 #     make SHELLCHECK_FILES=$(find ./core/ -name '*.sh') check.lint.shellcheck
 #         Runs 'shellcheck' against the files in './core/' that end with ".sh".
 #
-#     make MOUNT_PATH="/root/.local/bin/" SHELLCHECK_FILES=$(find ./core/ -name '*.sh') check.lint.shellcheck
-#         Mounts Sheldon to '/root/.local/bin/' in the Docker container and
+#     make MOUNT_PATH="/root/.local/lib/" SHELLCHECK_FILES=$(find ./core/ -name '*.sh') check.lint.shellcheck
+#         Mounts Sheldon to '/root/.local/lib/' in the Docker container and
 #         runs 'shellcheck' against the files in './core/' that end with ".sh".
 #
 .PHONY: check.lint.shellcheck
@@ -194,8 +194,8 @@ check.lint.shellcheck: prepare
 #     make check.lint.yamllint
 #         Runs 'yamllint' against files in YAML_FILES.
 #
-#     make MOUNT_PATH="~/.local/bin/" check.lint.yamllint
-#         Mounts Sheldon to '~/.local/bin/' in the Docker container and runs
+#     make MOUNT_PATH="/usr/lib/sheldon/" check.lint.yamllint
+#         Mounts Sheldon to '/usr/lib/sheldon/' in the Docker container and runs
 #         'yamllint' against all files in YAML_FILES.
 #
 #     make YAML_FILES="./foobar.yaml" check.lint.yamllint
@@ -252,8 +252,8 @@ check.lint.yamllint: prepare
 #     make check.test.unit
 #         Runs all unit tests.
 #
-#     make MOUNT_PATH="/root/.local/bin/" check.test.unit
-#         Mounts Sheldon to '~/.local/bin/' in the Docker container and runs
+#     make MOUNT_PATH="/root/.local/lib/" check.test.unit
+#         Mounts Sheldon to '/usr/lib/sheldon/' in the Docker container and runs
 #         all unit tests.
 #
 #     make TEST_NAMES="StringTest.testJoin" check.test.unit
@@ -262,8 +262,8 @@ check.lint.yamllint: prepare
 #     make TEST_NAMES="ArrayTest" check.test.unit
 #         Runs all the tests in ./tests/ArrayTest.sh.
 #
-#     make MOUNT_PATH="/root/.local/bin/" TEST_NAMES="ArrayTest" check.test.unit
-#         Mounts Sheldon to '/root/.local/bin/' in the Docker container and
+#     make MOUNT_PATH="/root/.local/lib/" TEST_NAMES="ArrayTest" check.test.unit
+#         Mounts Sheldon to '/root/.local/lib/' in the Docker container and
 #         runs all the tests in ./tests/ArrayTest.sh.
 #
 .PHONY: check.test.unit
