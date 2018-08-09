@@ -13,10 +13,13 @@ Sheldon.Test.TestFrameworkInAFile.it() {
   local -a parts
   local main
   local sub
+  local word
 
-  IFS=$"." read -ra parts <<< "${FUNCNAME[1]//./ }"
-  main="${parts[0]:0:-4}"
-  sub="${parts[1]:4}"
+  # Suffix for main part and prefix for sub part.
+  word="test"
+  read -d "." -ra parts <<< "${FUNCNAME[1]//./ }"
+  main="${parts[0]:0:-${#word}}"
+  sub="${parts[1]:${#word}}"
   # Escaping literal % for printf.
   message="${main}.${sub,}: ${1//%/%%}"
 
