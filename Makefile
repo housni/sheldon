@@ -1,52 +1,442 @@
+# Credits: http://clarkgrubb.com/makefile-style-guide
+MAKEFLAGS += --warn-undefined-variables
+SHELL := bash
+.SHELLFLAGS := -eu -o pipefail -c
 .DEFAULT_GOAL := all
+.DELETE_ON_ERROR:
+.SUFFIXES:
 
-# Default shell is bash.
-SHELL := /bin/bash
-
-# list of shell scripts to run against shellcheck.
-SHELLCHECK_FILES ?= $(shell find ./ -name '*.sh')
-
-# Name of test(s) to run.
-TEST_NAMES ?=
+# Location where Sheldon will be installed.
+DESTDIR ?= /usr/lib/sheldon
 
 # Docker executable.
 DOCKER ?= docker
 
+# Find the shell scripts to run 'shellcheck' against.
+# Default: All scripts ending with '.sh' in the project.
+SHELLCHECK_FILES ?= $(shell find ./ -name '*.sh')
+
+# Files to run 'yamllint' against.
+YAML_FILES ?= .travis.yml
+
+# Name of test(s) to run.
+# Default: null
+TEST_NAMES ?=
+
 # Version of Bash to test against.
+# Default: 4.3
 BASH_VERSION ?= 4.3
 
-# Directory Sheldon will be mounted to in Docker.
-VOLUME ?= /usr/lib/sheldon
+# Directory Sheldon will be bind mounted to in Docker.
+# Default: $(DESTDIR)
+MOUNT_PATH ?= $(DESTDIR)
 
-# target: all - Run all targets.
-.PHONY: all
-all: prepare lint test
+# Target for detailed help.
+HELP_TARGET :=
 
-# target: prepare - Prepare for lint/test targets by pulling Docker images.
+# Name of target for the banner.
+TARGET_NAME ?= 
+
+# Characters to use when drawing a header/banner.
+BANNER_CHAR ?= \#
+BANNER_PREFIX ?= TARGET: 
+
+# Returns the length of any skill.
+strlen = "$(shell declare some; some=$1; echo $${\#some}; )"
+
+# NAME
+#     prepare - Pulls down Docker images.
+#
+# SYNOPSIS
+#     make [OPTION]... prepare
+#
+# DESCRIPTION
+#     Prepares project for lint and test targets by pulling down Docker images
+#     that will later be used for running linters and unit tests.
+#
+#     BASH_VERSION
+#         The tag of the Bash Docker image to pull.
+#         You shouldn't be changing this unless you know what you're doing.
+#         See: https://hub.docker.com/r/library/bash/tags/
+#
+#     DOCKER
+#         Docker executable.
+#         Don't change this unless you know what you're doing.
+#
+# EXAMPLES
+#     make prepare
+#         Runs Dockers 'pull' command to pull down the default images for
+#         linter and running unit tests.
+#
+#     make BASH_VERSION=4.1 prepare
+#         Runs Dockers 'pull' command to pull down the default image for
+#         the linter but pulls down a Bash container with tag (version)
+#         4.1. NOTE: Sheldon only works on Bash 4.3 and greater.
+#
 .PHONY: prepare
 prepare:
-	$(DOCKER) pull "koalaman/shellcheck:stable"
-	$(DOCKER) pull "bash:$(BASH_VERSION)"
+	@$(MAKE) --no-print-directory TARGET_NAME=$@ _output.banner
+	@$(DOCKER) pull "sdesbure/yamllint"
+	@$(DOCKER) pull "bash:$(BASH_VERSION)"
+	@$(DOCKER) pull "koalaman/shellcheck:stable"
 
-# target: lint - Run linters.
-.PHONY: lint
-lint: shellcheck
+# NAME
+#     check - See targets 'check.lint' and 'check.test.unit'.
+#
+# SYNOPSIS
+#     make [OPTION]... check
+#
+# DESCRIPTION
+#     See targets 'check.lint' and 'check.test.unit'.
+#
+.PHONY: check
+check: check.lint check.test.unit
 
-# target: shellcheck - Run 'shellcheck' against *.sh files in a Docker container.
-.PHONY: shellcheck
-shellcheck:
-	$(DOCKER) run -v "$(CURDIR):$(VOLUME)" -w "$(VOLUME)" "koalaman/shellcheck:stable" $(SHELLCHECK_FILES)
+# NAME
+#     check.lint - See target 'check.lint.shellcheck' and 'check.lint.yamllint'.
+#
+# SYNOPSIS
+#     make [OPTION]... check.lint
+#
+# DESCRIPTION
+#     See target 'shellcheck'.
+#
+.PHONY: check.lint
+check.lint: check.lint.shellcheck check.lint.yamllint
 
-# target: test - Run Sheldon unit tests in a Docker container.
-.PHONY: test
-test:
-	$(DOCKER) run -v "$(CURDIR):$(VOLUME)" -w "$(VOLUME)" "bash:$(BASH_VERSION)" ./test/test.sh $(TEST_NAMES)
+# NAME
+#     check.lint.shellcheck - Runs 'shellcheck' against shell scripts.
+#
+# SYNOPSIS
+#     make [OPTION]... check.lint.shellcheck
+#
+# DESCRIPTION
+#     Runs a Docker container using the official 'shellcheck' Docker image
+#     and runs 'shellcheck' against all shell scripts in SHELLCHECK_FILES.
+#
+#     MOUNT_PATH
+#         Location on the Docker container where Sheldon will be mounted.
+#         This is the location from which shellcheck will run. It's also the
+#         directory the container will start in and it will be mounted as
+#         read-only.
+#
+#     SHELLCHECK_FILES
+#         Files to run 'shellcheck' against. These files may be space or
+#         new-line delimited and must be relative to MOUNT_PATH.
+#
+#     DOCKER
+#         Docker executable.
+#         Don't change this unless you know what you're doing.
+#
+#     CURDIR
+#         Absolute pathname of the current working directory.
+#         See: https://www.gnu.org/software/make/manual/html_node/Quick-Reference.html
+#
+# EXAMPLES
+#     make check.lint.shellcheck
+#         Runs 'shellcheck' against all files.
+#
+#     make MOUNT_PATH="~/.local/bin/" check.lint.shellcheck
+#         Mounts Sheldon to '~/.local/bin/' in the Docker container and runs
+#         'shellcheck' against all files ending with '.sh' in that directory.
+#
+#     make SHELLCHECK_FILES="./core/Sheldon.sh ./util/String.sh" check.lint.shellcheck
+#         Runs 'shellcheck' against only './core/Sheldon.sh' and './util/String.sh'.
+#
+#     make SHELLCHECK_FILES=$(find ./core/ -name '*.sh') check.lint.shellcheck
+#         Runs 'shellcheck' against the files in './core/' that end with ".sh".
+#
+#     make MOUNT_PATH="/root/.local/bin/" SHELLCHECK_FILES=$(find ./core/ -name '*.sh') check.lint.shellcheck
+#         Mounts Sheldon to '/root/.local/bin/' in the Docker container and
+#         runs 'shellcheck' against the files in './core/' that end with ".sh".
+#
+.PHONY: check.lint.shellcheck
+check.lint.shellcheck: prepare
+	@$(MAKE) --no-print-directory TARGET_NAME=$@ _output.banner
+	@$(DOCKER) run \
+		--rm \
+		--mount type=bind,source="$(CURDIR)",target=$(MOUNT_PATH),readonly \
+		-w "$(MOUNT_PATH)" \
+		"koalaman/shellcheck:stable" \
+		$(SHELLCHECK_FILES)
 
-## target: gen-docs - Generate Sphinx docs.
-# gen-docs:
-# 	-rm -rf docs
+# NAME
+#     check.lint.yamllint - Runs 'yamllint' against YAML files.
+#
+# SYNOPSIS
+#     make [OPTION]... check.lint.yamllint
+#
+# DESCRIPTION
+#     Runs a Docker container using an image with 'yamllint' installed and runs
+#     it against files in YAML_FILES.
+#
+#     MOUNT_PATH
+#         Location on the Docker container where Sheldon will be mounted.
+#         This is the location from which yamllint will run. It's also the
+#         directory the container will start in and it will be mounted as
+#         read-only.
+#
+#         See: https://hub.docker.com/r/sdesbure/yamllint/
+#
+#     YAML_FILES
+#         Files to run 'yamllint' against. These files may be space or
+#         new-line delimited and must be relative to MOUNT_PATH.
+#
+#     DOCKER
+#         Docker executable.
+#         Don't change this unless you know what you're doing.
+#
+#     CURDIR
+#         Absolute pathname of the current working directory.
+#         See: https://www.gnu.org/software/make/manual/html_node/Quick-Reference.html
+#
+# EXAMPLES
+#     make check.lint.yamllint
+#         Runs 'yamllint' against files in YAML_FILES.
+#
+#     make MOUNT_PATH="~/.local/bin/" check.lint.yamllint
+#         Mounts Sheldon to '~/.local/bin/' in the Docker container and runs
+#         'yamllint' against all files in YAML_FILES.
+#
+#     make YAML_FILES="./foobar.yaml" check.lint.yamllint
+#         Runs 'yamllint' against only './foobar.yaml'.
+#
+#     make SHELLCHECK_FILES=$(find ./ -regex '.*\.ya?ml') check.lint.yamllint
+#         Runs 'yamllint' against all files in './' that end with either ".yml"
+#         or ".yaml".
+#
+.PHONY: check.lint.yamllint
+check.lint.yamllint: prepare
+	@$(MAKE) --no-print-directory TARGET_NAME=$@ _output.banner
+	@$(DOCKER) run \
+		--rm --mount type=bind,source="$(CURDIR)",target=$(MOUNT_PATH),readonly \
+		-w "$(MOUNT_PATH)" \
+		"sdesbure/yamllint" \
+		yamllint $(YAML_FILES)
 
-# target: help - Display callable targets.
+# NAME
+#     check.test.unit - Runs Sheldon unit tests inside a Docker container.
+#
+# SYNOPSIS
+#     make [OPTION]... check.test.unit
+#
+# DESCRIPTION
+#     Runs a Docker container using the official 'bash' Docker image
+#     and runs Sheldons unit tests defined in TEST_NAMES. By default,
+#     the Docker image used is version BASH_VERSION.
+#
+#     MOUNT_PATH
+#         Location on the Docker container where Sheldon will be mounted.
+#         This is the location from which the tests will run. It's also the
+#         directory the container will start in and it will be mounted as
+#         read-only.
+#
+#     TEST_NAMES
+#         The names of the tests to run. These names may be space or new-line
+#         delimited. See ./test/test.sh for more info.
+#
+#     BASH_VERSION
+#         The tag of the Bash Docker image to run unit tests against.
+#         You shouldn't be changing this unless you know what you're doing.
+#         See: https://hub.docker.com/r/library/bash/tags/
+#
+#     DOCKER
+#         Docker executable.
+#         Don't change this unless you know what you're doing.
+#
+#     CURDIR
+#         Absolute pathname of the current working directory.
+#         See: https://www.gnu.org/software/make/manual/html_node/Quick-Reference.html
+#
+# EXAMPLES
+#     make check.test.unit
+#         Runs all unit tests.
+#
+#     make MOUNT_PATH="/root/.local/bin/" check.test.unit
+#         Mounts Sheldon to '~/.local/bin/' in the Docker container and runs
+#         all unit tests.
+#
+#     make TEST_NAMES="StringTest.testJoin" check.test.unit
+#         Runs the 'StringTest.testJoin' test in ./tests/StringTest.sh.
+#
+#     make TEST_NAMES="ArrayTest" check.test.unit
+#         Runs all the tests in ./tests/ArrayTest.sh.
+#
+#     make MOUNT_PATH="/root/.local/bin/" TEST_NAMES="ArrayTest" check.test.unit
+#         Mounts Sheldon to '/root/.local/bin/' in the Docker container and
+#         runs all the tests in ./tests/ArrayTest.sh.
+#
+.PHONY: check.test.unit
+check.test.unit: prepare
+	@$(MAKE) --no-print-directory TARGET_NAME=$@ _output.banner
+	@$(DOCKER) run \
+		--rm \
+		--mount type=bind,source="$(CURDIR)",target=$(MOUNT_PATH),readonly \
+		-w "$(MOUNT_PATH)" \
+		"bash:$(BASH_VERSION)" \
+		./test/test.sh $(TEST_NAMES)
+
+# NAME
+#     all - See targets 'check', 'clean' and 'install'.
+#
+# SYNOPSIS
+#     make [OPTION]... all
+#
+# DESCRIPTION
+#     See targets See targets 'check', 'clean' and 'install'.
+#
+.PHONY: all
+all: check clean install
+
+# NAME
+#     _output.banner - Display a prominent banner.
+#
+# SYNOPSIS
+#     make TARGET_NAME=CALlING_TARGET _output.banner
+#
+# DESCRIPTION
+#     This is really just meant for internal use. Since I'm colourblind, visual
+#     markers help a lot especially when viewing a ton of output in a CI tool
+#     like Jenkins or TravisCI, for example.
+#
+#     This displays a prominent banner and is totally customizable.
+#     The banner consists of a string of characters, $(BANNER_CHAR), on the first
+#     line, the next line starts with a prefix, $(BANNER_PREFIX), followed by
+#     $(TARGET_NAME). The next line is the final one and it's identical to the
+#     first. The length is determined baseed on the length of $(BANNER_PREFIX)
+#     and $(TARGET_NAME), which is a required argument.
+#
+#     TARGET_NAME
+#         The name of the target for which the banner will be displayed.
+#         The variable passed in is usually '$@'.' This argument is required.
+#
+#     BANNER_PREFIX
+#         The prefix text in the banner which appears just before and on the
+#         same line as $(TARGET_NAME).
+#
+#     BANNER_CHAR
+#         The character for the banner which will form a line above and below
+#         $(TARGET_NAME).
+#
+# EXAMPLES
+#     make TARGET_NAME=$@ _output.banner
+#         Displays a banner for the target '$(TARGET_NAME)':
+#
+#             $ make TARGET_NAME="foobar" _output.banner
+#             ##############
+#             TARGET: foobar
+#             ##############
+#
+#     make BANNER_CHAR="-" BANNER_PREFIX="> " TARGET_NAME=$@ _output.banner
+#         Displays a banner with hyphens at the top and bottom and a prefix
+#         of "> ":
+#             $ make BANNER_CHAR="-" BANNER_PREFIX="> " TARGET_NAME=foobar _output.banner
+#             --------
+#             > foobar
+#             --------
+#
+.PHONY: _output.banner
+_output.banner:
+ifndef TARGET_NAME
+	$(error TARGET_NAME is undefined in _output.banner())
+endif
+	@{ \
+		declare -i target_len ;\
+		declare -i total_len ;\
+		declare -i prefix_len ;\
+		# Get length of text to display, minus prefix. \
+		target_len="$(call strlen,$(TARGET_NAME))" ;\
+		# Get length of prefix. \
+		prefix_len="$(call strlen,"$(BANNER_PREFIX)")" ;\
+		# Concatenate the two together. \
+		total_len=$$(( prefix_len + target_len )) ;\
+		# Print $(BANNER_CHAR) until it's the length of $${total_len} \
+		# Print $(BANNER_PREFIX) followed by $(TARGET_NAME) \
+		# Print $(BANNER_CHAR) until it's the length of $${total_len} \
+		printf "%$${total_len}s\n" | tr " " "$(BANNER_CHAR)" ;\
+		printf "%s%b\n" "$(BANNER_PREFIX)" "$(TARGET_NAME)" ;\
+		printf "%$${total_len}s\n" | tr " " "$(BANNER_CHAR)" ;\
+	}
+
+# NAME
+#     help - Display callable targets and manuals for individual targets.
+#
+# SYNOPSIS
+#     make [OPTION]... help
+#
+# DESCRIPTION
+#     Displays all the callable targets in this Makefile. If HELP_TARGET is
+#     given, the documentation above the target (like this one you're reading
+#     right now) for that corresponding target, HELP_TARGET, is displayed.
+#
+#     This is a pure Bash implementation without the use of cat, grep, sed,
+#     awk, etc...well, what do you expect, this IS Sheldon!
+#
+#     HELP_TARGET
+#         The target to to display the documentation for.
+#
+# EXAMPLES
+#     make help
+#         Displays all callable targets.
+#
+#     make HELP_TARGET=check.lint.shellcheck help
+#         Displays the documentation for the 'shellcheck' target.
+#
+#     make HELP_TARGET=shel help
+#         Displays the documentation for any tagets that begin with 'shel' target.
+#
 .PHONY: help
 help:
-	egrep "^# target:" [Mm]akefile
+	@$(MAKE) --no-print-directory TARGET_NAME=$@ _output.banner
+	@{ \
+		start="# NAME" ;\
+		state=0 ;\
+		mapfile -t contents < [Mm]akefile ;\
+		regexp="^#\s{5}$(HELP_TARGET)" ;\
+		for content in "$${contents[@]}"; do \
+			if [[ $$state -gt 0 ]] && [[ "$$content" =~ $$regexp ]]; then \
+				# We are at the beginning of a documentation block. \
+				if [[ ! -z "$(HELP_TARGET)" ]]; then \
+					state=2 ;\
+					echo "" ;\
+					echo "$${start:2}" ;\
+				else \
+					# Set state back to zero so we don't output anything later on \
+					# and output the target name for discovery, in the next line. \
+					state=0 ;\
+				fi ;\
+				echo "$${content:2}" ;\
+			elif [[ $$state -eq 2 ]] && [[ "$${content:0:1}" = '#' ]] && [[ ! -z "$(HELP_TARGET)" ]]; then \
+				# We are in the middle of a documentation block. \
+				echo "$${content:2}" ;\
+			fi ;\
+			if [[ $$state -eq 2 ]] && [[ "$${content:0:1}" != '#' ]] && [[ ! -z "$(HELP_TARGET)" ]]; then \
+				# We are at the end of a documentation block. \
+				echo "" ;\
+				break ;\
+			fi ;\
+			if [[ "$${content}" = "$$start" ]]; then \
+				state=1 ;\
+			fi ;\
+		done ;\
+	}
+
+# TODO: Remove code coverage dir
+.PHONY: clean
+clean:
+
+# TODO
+# Installs Sheldon to $(DESTDIR) and adds docs.
+.PHONY: install
+install:
+
+# TODO
+# Uninstalls Sheldon and docs
+.PHONY: uninstall
+uninstall:
+
+# TODO
+## target: build-docs - Generate docs (Sphinx -> readthedocs/man pages).
+#build-docs: | docs
+#   -rm -rf $@
+#   mkdir -p $@

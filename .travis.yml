@@ -18,6 +18,5 @@ notifications:
 before_install:
   - make prepare
 script:
-  - make lint
-  - make test
-  # - make gen-docs
+  - make check.lint
+  - make check.test.unit
