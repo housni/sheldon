@@ -14,7 +14,7 @@
 [[ ${BASH_VERSION} =~ ([^\.]).([^\.])* ]]
 if [[ ${BASH_REMATCH[1]} -lt 4
    || ${BASH_REMATCH[1]} -eq 4 && ${BASH_REMATCH[2]} -lt 3 ]]; then
-  echo "WARNING: Sheldon is only supported on bash 4.3 and you are" \
+  echo "WARNING: Sheldon is only supported on bash 4.3 and greater but you are" \
        "using version ${BASH_VERSION}"
 fi
 
