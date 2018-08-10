@@ -164,18 +164,18 @@ Sheldon.Util.String.insert() {
 
 # See: https://stackoverflow.com/a/2265268/379786
 Sheldon.Util.String.lower() {
-  if [[ ! -z "$2" ]]; then
-    echo "${1,,[$2]}"
-  else
+  if [[ -z "${2:-}" ]]; then
     echo "${1,,}"
+  else
+    echo "${1,,[$2]}"
   fi
 }
 
 Sheldon.Util.String.upper() {
-  if [[ ! -z "$2" ]]; then
-    echo "${1^^[$2]}"
-  else
+  if [[ -z "${2:-}" ]]; then
     echo "${1^^}"
+  else
+    echo "${1^^[$2]}"
   fi
 }
 
