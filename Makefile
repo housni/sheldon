@@ -1,3 +1,7 @@
+# IMPORTANT:
+# Make sure all targets are properly documented. Not documenting them means
+# they will not be discoverable via `make help` or `make HELP_TARGET=my_target_here help`.
+
 # Credits: http://clarkgrubb.com/makefile-style-guide
 MAKEFLAGS += --warn-undefined-variables
 SHELL := bash
@@ -213,6 +217,18 @@ check.lint.yamllint: prepare
 		-w "$(MOUNT_PATH)" \
 		"sdesbure/yamllint" \
 		yamllint $(YAML_FILES)
+
+# NAME
+#     check.test - See target 'check.test.unit'.
+#
+# SYNOPSIS
+#     make [OPTION]... check.test
+#
+# DESCRIPTION
+#     See target 'check.test.unit'.
+#
+.PHONY: check.test
+check.test: check.test.unit
 
 # NAME
 #     check.test.unit - Runs Sheldon unit tests inside a Docker container.
@@ -440,3 +456,8 @@ uninstall:
 #build-docs: | docs
 #   -rm -rf $@
 #   mkdir -p $@
+
+# TODO
+# Installs git precommit hooks to run `make check` in order to make sure code
+# passes linting and unit tests before it can be committed..
+# hooks.git.precommit:

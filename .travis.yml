@@ -19,4 +19,4 @@ before_install:
   - make prepare
 script:
   - make check.lint
-  - make check.test.unit
+  - make check.test
