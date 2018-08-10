@@ -3,11 +3,11 @@
 FileTest.setUp() {
   import Sheldon.Util.File as File
 
-  FILE_SHELDON_TEMP_FILE="$(mktemp)"
-  FILE_SHELDON_TEMP_DIR="$(mktemp -d)"
-  FILE_SHELDON_TEMP_SYMLINK="/tmp/FileTest.symlink.${RANDOM}"
+  FILE_SHELDON_TEMP_FILE="$(mktemp -t sheldon.XXXXXXXXXX)"
+  FILE_SHELDON_TEMP_DIR="$(mktemp -d -t sheldon.XXXXXXXXXX)"
+  FILE_SHELDON_TEMP_SYMLINK="$(mktemp -u -t Sheldon.FileTest.symlink.XXXXXXXXXX)"
   ln -s "${FILE_SHELDON_TEMP_FILE}" "${FILE_SHELDON_TEMP_SYMLINK}"
-  FILE_SHELDON_TEMP_PIPE="/tmp/FileTest.pipe.${RANDOM}"
+  FILE_SHELDON_TEMP_PIPE="$(mktemp -u -t Sheldon.FileTest.pipe.XXXXXXXXXX)"
   mknod $FILE_SHELDON_TEMP_PIPE p
 }
 
