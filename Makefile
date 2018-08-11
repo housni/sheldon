@@ -18,7 +18,7 @@ DOCKER ?= docker
 
 # Find the shell scripts to run 'shellcheck' against.
 # Default: All scripts ending with '.sh' in the project.
-SHELLCHECK_FILES ?= $(shell find ./ -name '*.sh')
+SHELL_SCRIPTS ?= $(shell find ./ -name '*.sh')
 
 # Files to run 'yamllint' against.
 YAML_FILES ?= .travis.yml
@@ -106,7 +106,7 @@ check: check.lint check.test.unit
 #     See target 'shellcheck'.
 #
 .PHONY: check.lint
-check.lint: check.lint.shellcheck check.lint.yamllint
+check.lint: check.lint.shellcheck check.lint.yamllint check.lint.sheldon
 
 # NAME
 #     check.lint.shellcheck - Runs 'shellcheck' against shell scripts.
@@ -116,7 +116,7 @@ check.lint: check.lint.shellcheck check.lint.yamllint
 #
 # DESCRIPTION
 #     Runs a Docker container using the official 'shellcheck' Docker image
-#     and runs 'shellcheck' against all shell scripts in SHELLCHECK_FILES.
+#     and runs 'shellcheck' against all shell scripts in SHELL_SCRIPTS.
 #
 #     MOUNT_PATH
 #         Location on the Docker container where Sheldon will be mounted.
@@ -124,7 +124,7 @@ check.lint: check.lint.shellcheck check.lint.yamllint
 #         directory the container will start in and it will be mounted as
 #         read-only.
 #
-#     SHELLCHECK_FILES
+#     SHELL_SCRIPTS
 #         Files to run 'shellcheck' against. These files may be space or
 #         new-line delimited and must be relative to MOUNT_PATH.
 #
@@ -144,13 +144,13 @@ check.lint: check.lint.shellcheck check.lint.yamllint
 #         Mounts Sheldon to '/usr/lib/sheldon/' in the Docker container and runs
 #         'shellcheck' against all files ending with '.sh' in that directory.
 #
-#     make SHELLCHECK_FILES="./core/Sheldon.sh ./util/String.sh" check.lint.shellcheck
+#     make SHELL_SCRIPTS="./core/Sheldon.sh ./util/String.sh" check.lint.shellcheck
 #         Runs 'shellcheck' against only './core/Sheldon.sh' and './util/String.sh'.
 #
-#     make SHELLCHECK_FILES=$(find ./core/ -name '*.sh') check.lint.shellcheck
+#     make SHELL_SCRIPTS=$(find ./core/ -name '*.sh') check.lint.shellcheck
 #         Runs 'shellcheck' against the files in './core/' that end with ".sh".
 #
-#     make MOUNT_PATH="/root/.local/lib/" SHELLCHECK_FILES=$(find ./core/ -name '*.sh') check.lint.shellcheck
+#     make MOUNT_PATH="/root/.local/lib/" SHELL_SCRIPTS=$(find ./core/ -name '*.sh') check.lint.shellcheck
 #         Mounts Sheldon to '/root/.local/lib/' in the Docker container and
 #         runs 'shellcheck' against the files in './core/' that end with ".sh".
 #
@@ -162,7 +162,36 @@ check.lint.shellcheck: prepare
 		--mount type=bind,source="$(CURDIR)",target=$(MOUNT_PATH),readonly \
 		-w "$(MOUNT_PATH)" \
 		"koalaman/shellcheck:stable" \
-		$(SHELLCHECK_FILES)
+		$(SHELL_SCRIPTS)
+
+# NAME
+#     check.lint.sheldon - Runs Sheldon specific checks against shell scripts.
+#
+# SYNOPSIS
+#     make [OPTION]... check.lint.sheldon
+#
+# DESCRIPTION
+#     Sheldon has some specific rules (e.g.: https://github.com/housni/Sheldon/issues/12)
+#     and so a tool was written to check for these rules.
+#
+#     CURDIR
+#         Absolute pathname of the current working directory.
+#         See: https://www.gnu.org/software/make/manual/html_node/Quick-Reference.html
+#
+# EXAMPLES
+#     make check.lint.sheldon
+#         Runs Sheldon checker against all files.
+#
+#     make SHELL_SCRIPTS="./core/Sheldon.sh ./util/String.sh" check.lint.sheldon
+#         Runs Sheldon checker against only './core/Sheldon.sh' and './util/String.sh'.
+#
+#     make SHELL_SCRIPTS=$(find ./core/ -name '*.sh') check.lint.sheldon
+#         Runs Sheldon checker against the files in './core/' that end with ".sh".
+#
+.PHONY: check.lint.sheldon
+check.lint.sheldon:
+	@$(MAKE) --no-print-directory TARGET_NAME=$@ _output.banner
+	@$(CURDIR)/linters/sheldon/check $(SHELL_SCRIPTS)
 
 # NAME
 #     check.lint.yamllint - Runs 'yamllint' against YAML files.
@@ -205,7 +234,7 @@ check.lint.shellcheck: prepare
 #     make YAML_FILES="./foobar.yaml" check.lint.yamllint
 #         Runs 'yamllint' against only './foobar.yaml'.
 #
-#     make SHELLCHECK_FILES=$(find ./ -regex '.*\.ya?ml') check.lint.yamllint
+#     make YAML_FILES=$(find ./ -regex '.*\.ya?ml') check.lint.yamllint
 #         Runs 'yamllint' against all files in './' that end with either ".yml"
 #         or ".yaml".
 #
