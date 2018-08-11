@@ -36,6 +36,32 @@ EOF
 EOF
 }
 
+ArrayTest.testAppend() {
+  local result
+  local -a expected
+  local -a arg1
+  local -a arg2
+
+  arg1=( var www )
+  # shellcheck disable=SC2190
+  expected=( var www html Housni 'housni.org' )
+  $Array.append arg1 html Housni 'housni.org'
+  # shellcheck disable=SC2211
+  $Test.it 'Should pass if elements are appended with individual arguments.' <<EOF
+    [[ 0 -eq $($Test.array_equal? arg1 expected) ]]
+EOF
+
+  arg1=( var www )
+  arg2=( html Housni 'housni.org' )
+  # shellcheck disable=SC2190
+  expected=( var www html Housni 'housni.org' )
+  $Array.append arg1 arg2
+  # shellcheck disable=SC2211
+  $Test.it 'Should pass if elements are appended with an array of arguments.' <<EOF
+    [[ 0 -eq $($Test.array_equal? arg1 expected) ]]
+EOF
+}
+
 # shellcheck disable=SC2086
 ArrayTest.testPop() {
   local result
