@@ -458,6 +458,11 @@ uninstall:
 #   mkdir -p $@
 
 # TODO
+# Install all hooks
+.PHONY: hooks
+hooks: hooks.git.precommit
+
+# TODO
 # Installs git precommit hooks to run `make check` in order to make sure code
 # passes linting and unit tests before it can be committed..
-# hooks.git.precommit:
+hooks.git.precommit:
