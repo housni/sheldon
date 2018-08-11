@@ -31,7 +31,7 @@ set -o functrace
 # We know he doesn't like it when someone is in his spot.
 declare -A Sheldon
 Sheldon_tmp=''
-Sheldon[register]=
+Sheldon[registry]=
 Sheldon[dir]="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 Sheldon[root]="$(cd "$(dirname "${Sheldon[dir]}")" && pwd)"
 Sheldon[file]="${Sheldon[dir]}/$(basename "${BASH_SOURCE[0]}")"
