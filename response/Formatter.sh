@@ -1,13 +1,5 @@
 #!/usr/bin/env bash
 
-################################################################################
-# Sheldon: The not-so-bashful Bash framework. Bazinga!
-#
-# @namespace Sheldon.Response.Formatter
-# @copyright Copyright 2015, Housni Yakoob (http://housni.org)
-# @license http://opensource.org/licenses/bsd-license.php The BSD License
-################################################################################
-
 Sheldon.Response.Formatter.error() {
   Sheldon.Response.Formatter.red "${1}"
 }

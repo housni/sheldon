@@ -1,44 +1,36 @@
 #!/usr/bin/env bash
 
-################################################################################
-# Sheldon: The not-so-bashful Bash framework. Bazinga!
-#
-# @namespace Sheldon.Core.Libraries
-# @copyright Copyright 2015, Housni Yakoob (http://housni.org)
-# @license http://opensource.org/licenses/bsd-license.php The BSD License
-################################################################################
-
 # For Library.sh, we have to manually source files since the function that
 # sources is defined below and it can't be used until it's defined.
 # shellcheck source=/dev/null
 # shellcheck disable=SC2154
 . "${Sheldon[dir]}"/util/Array.sh
 
-################################################################################
-# Locates and sources the script based on $1. This function assumes the first
-# parameter is a namespace, of sorts, separated by '.' (default). Based on this
-# format, it acts like a rudimentary autoloader and sources the file.
-# The second optional parameter can be used to specify a different separater.
-#
-# ### Usage
-#
+#####
+# Locates and sources the script.
+#####
+# This function assumes the first parameter is a namespace separated by '.' 
+# (default). Based on this format, it acts like a rudimentary autoloader and
+# sources the file. The second optional parameter can be used to specify a
+# different separator.
+##### Usage
 # ```
 # Sheldon.Core.Libraries.load  Sheldon.Util.String
 # ```
 # The above will source the file `util/String.sh`.
 #
 # Hypothetically, if all the functions were renamed so that instead of '.'
-# being the separator, '.' was used instead, we could do this:
+# being the separator, '::' was used instead, we could do this:
 # ```
-# Sheldon.Core.Libraries.load  "Sheldon.Util.String" ".".
+# Sheldon.Core.Libraries.load  "Sheldon.Util.String" "::"
 # ```
 #
+# https://thomas-cokelaer.info/tutorials/sphinx/rest_syntax.html#explicit-links
 # @see import()
-# @param string $1
-#     The namespace (as it were) of the file you want to source.
-# @param string $2 optional
-#     The separator used in $_shld_namespace.
-################################################################################
+#
+# :param 1: (string) The namespace of the file you want to source.
+# :param 2: (string) The separator used in $1.
+# :returns: (void) Sources file corresponding to $1.
 Sheldon.Core.Libraries.load() {
   local namespace
   local separator
@@ -67,12 +59,12 @@ Sheldon.Core.Libraries.load() {
   unset "parts[len]"
 
   # Join the parts and convert them to lower case.
-  path=$(Sheldon.Util.Array.implode '/' parts)
+  path=$(printf "/%s" "${parts[@]}")
   path="${path,,}"
 
   # Append the file base name and the extension.
   path="${path}/${script}.sh"
 
   # TODO: Make sure the file is sourced only once in a shell.
-  . "${Sheldon[dir]}/${path}"
+  . "${Sheldon[dir]}${path}"
 }
