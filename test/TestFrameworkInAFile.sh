@@ -102,14 +102,14 @@ Sheldon.Test.TestFrameworkInAFile.bold() {
 }
 
 Sheldon.Test.TestFrameworkInAFile.array_diff() {
-  local -n array1
-  local -n array2
+  local -n __shld_array1
+  local -n __shld_array2
   local diff
 
-  array1="$1"
-  array2="$2"
+  __shld_array1="$1"
+  __shld_array2="$2"
   # Setting 'true' on failure so that the _error() trap doesn't halt the script if the diff fails.
-  diff=$(diff <(printf "%s\\n" "${array1[@]}") <(printf "%s\\n" "${array2[@]}") || true)
+  diff=$(diff <(printf "%s\\n" "${__shld_array1[@]}") <(printf "%s\\n" "${__shld_array2[@]}") || true)
   diff=$(echo -n "$diff")
 
   echo "${diff[@]}"
@@ -117,27 +117,27 @@ Sheldon.Test.TestFrameworkInAFile.array_diff() {
 
 # If two arrays are equal, return 0, else return 1
 Sheldon.Test.TestFrameworkInAFile.array_equal?() {
-  local -n array1
-  local -n array2
+  local -n __shld_array1
+  local -n __shld_array2
 
-  array1="$1"
-  array2="$2"
+  __shld_array1="$1"
+  __shld_array2="$2"
 
-  if [[ "${#array1[@]}" -ne "${#array2[@]}" ]]; then
+  if [[ "${#__shld_array1[@]}" -ne "${#__shld_array2[@]}" ]]; then
     echo 1
     return
   fi
 
   counter=0
-  for xx in ${!array2[*]}; do
-    for yy in ${!array1[*]}; do
-      if [[ "${array2[xx]}" == "${array1[yy]}" ]]; then
+  for xx in ${!__shld_array2[*]}; do
+    for yy in ${!__shld_array1[*]}; do
+      if [[ "${__shld_array2[xx]}" == "${__shld_array1[yy]}" ]]; then
         ((counter++))
       fi
     done
   done
 
-  if [ $counter -ne ${#array1[@]} ]; then
+  if [ $counter -ne ${#__shld_array1[@]} ]; then
     echo 1
     return
   fi

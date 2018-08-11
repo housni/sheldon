@@ -56,16 +56,16 @@ Sheldon.Util.Array.unshift() {
   __shld_array1="$1"
 
   if [[ $# -gt 2 ]]; then
-    local array2
+    local __shld_array2
     shift
-    array2=( "${@}" )
+    __shld_array2=( "${@}" )
   else
-    local -n array2
-    array2="$2"
+    local -n __shld_array2
+    __shld_array2="$2"
   fi
 
   # We need to modify the reference to the original array so we do it like this.
-  __shld_array1=( "${array2[@]}" "${__shld_array1[@]}" )
+  __shld_array1=( "${__shld_array2[@]}" "${__shld_array1[@]}" )
 }
 
 # Removes the first item of an array
