@@ -25,7 +25,7 @@ Sheldon.Util.Array.push() {
 # Alias of Sheldon.Util.Array.push.
 # See Python's append().
 Sheldon.Util.Array.append() {
-  Sheldon.Util.Array.push $@
+  Sheldon.Util.Array.push "$@"
 }
 
 # declare HTML

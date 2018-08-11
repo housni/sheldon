@@ -34,7 +34,9 @@ RegistryTest.testGet() {
   arg="${rand}foo"
   Sheldon["registry.${arg}"]="bar"
   expected="bar"
+  # shellcheck disable=SC2086
   result=$($Registry.get "$arg")
+  # shellcheck disable=SC2086
   $Test.it "Should pass if the value of the key '$arg' that was retuend is '$expected' ." <<EOF
      [[ "$result" = "$expected" ]]
 EOF

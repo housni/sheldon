@@ -8,7 +8,7 @@ FileTest.setUp() {
   FILE_SHELDON_TEMP_SYMLINK="$(mktemp -u -t Sheldon.FileTest.symlink.XXXXXXXXXX)"
   ln -s "${FILE_SHELDON_TEMP_FILE}" "${FILE_SHELDON_TEMP_SYMLINK}"
   FILE_SHELDON_TEMP_PIPE="$(mktemp -u -t Sheldon.FileTest.pipe.XXXXXXXXXX)"
-  mknod $FILE_SHELDON_TEMP_PIPE p
+  mknod "$FILE_SHELDON_TEMP_PIPE" p
 }
 
 FileTest.tearDown() {
