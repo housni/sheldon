@@ -1,6 +1,19 @@
+#
+# Need help? Just do:
+#
+#    make help
+#
+# That will list all the make targets. To get details about a specific target:
+#
+#    make HELP_TARGET=check.lint.shellcheck help
+#
+# The above will show you the detailed documentation in a man like format for
+# the target 'check.lint.shellcheck'.
+#
 # IMPORTANT:
-# Make sure all targets are properly documented. Not documenting them means
+# Make sure all new targets are properly documented. Not documenting them means
 # they will not be discoverable via `make help` or `make HELP_TARGET=my_target_here help`.
+#
 
 # Credits: http://clarkgrubb.com/makefile-style-guide
 MAKEFLAGS += --warn-undefined-variables

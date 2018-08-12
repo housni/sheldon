@@ -128,7 +128,7 @@ Sheldon.Util.Array.implode() {
   __shld_data="$2"
   trim="${#glue}"
 
-  if [[ "$glue" == *"%"* ]]; then
+  if [[ "$glue" = *"%"* ]]; then
     # We need to escape '%' since we are using printf.
     glue=${glue//%/%%}
   fi

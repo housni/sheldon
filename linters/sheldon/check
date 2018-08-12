@@ -43,10 +43,10 @@ else
   files=( $@ )
 fi
 
-# readlink doesn't work on some systems...
+# realpath doesn't work on some systems...
 resolver=$(command -v realpath) || "$(command -v readlink) -f"
 exit=0
-# Match 'local -n *'
+# Basically, match 'local -n *'
 regex="^[^[:alpha:]]*local\s+-n\s+(.*)"
 shopt -s globstar
 echo "------------------------"
@@ -70,7 +70,7 @@ for file in "${files[@]}"; do
         for ((i=1; i<=$error_pos; i++)); do
           printf " "
         done
-        printf "%s\n" "^-- Variables passed by reference must be prefixed with '__shld_'. See: https://github.com/housni/Sheldon/issues/12"
+        printf "%s\n" "^-- SHLD001: Variables passed by reference must be prefixed with '__shld_'. See: https://github.com/housni/Sheldon/issues/12"
         echo
       fi
     fi
@@ -78,4 +78,7 @@ for file in "${files[@]}"; do
 done
 shopt -u globstar
 
+if [[ $exit -eq 0 ]]; then
+  echo "OK"
+fi
 exit $exit
