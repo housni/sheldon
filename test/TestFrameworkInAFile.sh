@@ -125,7 +125,7 @@ Sheldon.Test.TestFrameworkInAFile.array_equal?() {
 
   if [[ "${#__shld_array1[@]}" -ne "${#__shld_array2[@]}" ]]; then
     echo 1
-    return
+    return 1
   fi
 
   counter=0
@@ -138,8 +138,8 @@ Sheldon.Test.TestFrameworkInAFile.array_equal?() {
   done
 
   if [ $counter -ne ${#__shld_array1[@]} ]; then
-    echo 1
-    return
+    echo 2
+    return 2
   fi
 
   echo 0
