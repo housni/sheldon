@@ -28,6 +28,7 @@ declare testNamespace
 declare testFunc
 declare parsedFunc
 declare resolver
+declare functions
 
 # shellcheck disable=SC2154
 # shellcheck disable=SC2086
@@ -61,10 +62,13 @@ for testFile in $allTestFiles; do
     "${testFilename}".setUp
   fi
 
-  for testOutput in $(declare -F); do
-    testNamespace=${testOutput%.*}
-    testFunc=${testOutput#*.}
+  # Function names.
+  # shellcheck disable=SC2207
+  IFS=$' \n\t' functions=( $(declare -F) )
 
+  for testOutput in "${functions[@]}"; do
+    IFS=$' \n\t' testNamespace=${testOutput%.*}
+    testFunc=${testOutput#*.}
     # TODO: If function doesn't exist, show error.
     # If we have assigned parsedFunc earlier, that means a specific function
     # name was passed in as a param, so we only allow that function to run.
