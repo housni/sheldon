@@ -28,23 +28,18 @@ Sheldon.Util.Array.append() {
   Sheldon.Util.Array.push "$@"
 }
 
-# declare HTML
-# declare -a dirs
-# dirs=( var www html )
-# $Array.pop =HTML dirs
-# echo "$HTML" # html
-# echo "${dirs[@]}" # var www
-# Sheldon.Util.Array.pop() {
-#   local -n __shld_array
-#   local last
+# TODO
+Sheldon.Util.Array.pop() {
+  local -n __shld_array
+  local last
 
-#   __shld_array="$1"
-#   last="${__shld_array[${#__shld_array[@]}-1]}"
+  __shld_array="$1"
+  last="${__shld_array[${#__shld_array[@]}-1]}"
 
-#   # We need to modify the reference to the original array so we do it like this.
-#   __shld_array=( "${__shld_array[@]:0:${#__shld_array[@]}-1}" )
-#   echo "${last}"
-# }
+  # We need to modify the reference to the original array so we do it like this.
+  __shld_array=( "${__shld_array[@]:0:${#__shld_array[@]}-1}" )
+  echo "${last}"
+}
 
 # Adds new items, $2 to the beginning of the array $1.
 #
