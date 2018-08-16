@@ -71,11 +71,6 @@ strlen = "$(shell declare some; some=$1; echo $${\#some}; )"
 #     Prepares project for lint and test targets by pulling down Docker images
 #     that will later be used for running linters and unit tests.
 #
-#     BASH_VERSION
-#         The tag of the Bash Docker image to pull.
-#         You shouldn't be changing this unless you know what you're doing.
-#         See: https://hub.docker.com/r/library/bash/tags/
-#
 #     DOCKER
 #         Docker executable.
 #         Don't change this unless you know what you're doing.
@@ -85,16 +80,11 @@ strlen = "$(shell declare some; some=$1; echo $${\#some}; )"
 #         Runs Dockers 'pull' command to pull down the default images for
 #         linter and running unit tests.
 #
-#     make BASH_VERSION=4.1 prepare
-#         Runs Dockers 'pull' command to pull down the default image for
-#         the linter but pulls down a Bash container with tag (version)
-#         4.1. NOTE: Sheldon only works on Bash 4.3 and greater.
-#
 .PHONY: prepare
 prepare:
 	@$(MAKE) --no-print-directory TARGET_NAME=$@ _output.banner
 	@$(DOCKER) pull "sdesbure/yamllint"
-	@$(DOCKER) pull "bash:$(BASH_VERSION)"
+	@$(DOCKER) build --rm -t sheldon ./
 	@$(DOCKER) pull "koalaman/shellcheck:stable"
 
 # NAME
@@ -331,7 +321,7 @@ check.test.unit: prepare
 		--rm \
 		--mount type=bind,source="$(CURDIR)",target=$(MOUNT_PATH),readonly \
 		-w "$(MOUNT_PATH)" \
-		"bash:$(BASH_VERSION)" \
+		sheldon \
 		./test/test.sh $(TEST_NAMES)
 
 # NAME
