@@ -14,6 +14,8 @@ Sheldon.Transform.JSON.dumps() {
   echo "{${joined:1}}"
 }
 
+# Requires gawk
+#
 # Converts a simple JSON object to a Bash array
 # NOTE: Will only work with valid, 1 level deep arrays.
 Sheldon.Transform.JSON.loads() {
@@ -27,7 +29,7 @@ Sheldon.Transform.JSON.loads() {
   token_2="<sheldon>,<sheldon>"
 
   # shellcheck disable=SC1004
-  serialized=$(awk -v token_1="$token_1" -v token_2="$token_2" 'BEGIN {
+  serialized=$(gawk -v token_1="$token_1" -v token_2="$token_2" 'BEGIN {
       # States that affect "stack":
       # 0 = no-save
       # 1 = save
