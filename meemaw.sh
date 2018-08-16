@@ -22,10 +22,8 @@ fi
 set -o errtrace
 set -o functrace
 
-
 # Less eager word splitting - no space.
-# IFS=$'\n\t'
-
+IFS=$'\n\t'
 
 # Setting and reserving some of Sheldons variables.
 # We know he doesn't like it when someone is in his spot.
@@ -250,11 +248,11 @@ import() {
 #   blahAdd 1 2 # Exits with 127
 # ```
 ################################################################################
-command_not_found_handle() {
-  if declare -F | grep -q __call; then
-    __call "$@"
-  fi
-}
+# command_not_found_handle() {
+#   if declare -F | grep -q __call; then
+#     __call "$@"
+#   fi
+# }
 
 
 # Source a few commonly used libraries.
