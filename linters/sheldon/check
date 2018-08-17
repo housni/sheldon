@@ -33,7 +33,6 @@ declare -i line
 declare shld_prefix
 declare good_part
 declare -i error_pos
-declare resolver
 declare files
 
 # If no args are provided, we'll look for files ourselves.
@@ -43,8 +42,6 @@ else
   files=( $@ )
 fi
 
-# realpath doesn't work on some systems...
-resolver=$(command -v realpath) || "$(command -v readlink) -f"
 exit=0
 # Basically, match 'local -n *'
 regex="^[^[:alpha:]]*local\s+-n\s+(.*)"
@@ -63,7 +60,7 @@ for file in "${files[@]}"; do
         exit=1
         good_part=${content%%${BASH_REMATCH[1]}*}
         error_pos=${#good_part}
-        file=$($resolver "$file")
+        file=$(readlink -f "$file")
         echo
         echo "In $file line $line:"
         echo "${content}"
