@@ -89,7 +89,7 @@ StringTest.testInsert() {
     ['filename']='backup.sql'
   );
 
-  template='/var/www/{{who}}/{{domain}}/backup/database/{{filename}}'
+  template='/var/www/{{ who }}/{{ domain }}/backup/database/{{ filename }}'
   expected='/var/www/Housni/housni.org/backup/database/backup.sql'
   result=$($String.insert "$template" data)
   $Test.it 'Should pass if placeholders are replaced properly.' <<EOF
@@ -110,7 +110,7 @@ EOF
   options=(
     ['before']='<?'
   )
-  template='/var/www/<?who}}/<?domain}}/backup/database/<?filename}}'
+  template='/var/www/<?who }}/<?domain }}/backup/database/<?filename }}'
   expected='/var/www/Housni/housni.org/backup/database/backup.sql'
   result=$($String.insert "$template" data options)
   $Test.it 'Should pass if custom before string for placeholders work.' <<EOF
@@ -121,7 +121,7 @@ EOF
   options=(
     ['after']=']'
   )
-  template='/var/www/{{who]/{{domain]/backup/database/{{filename]'
+  template='/var/www/{{ who]/{{ domain]/backup/database/{{ filename]'
   expected='/var/www/Housni/housni.org/backup/database/backup.sql'
   result=$($String.insert "$template" data options)
   $Test.it 'Should pass if custom after string for placeholders work.' <<EOF

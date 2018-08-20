@@ -75,7 +75,7 @@ Sheldon.Util.String.insert() {
   local datum
   local -A defaults
 
-  defaults=( ['before']='{{' ['after']='}}' )
+  defaults=( ['before']='{{ ' ['after']=' }}' )
   if [[ $# -gt 2 ]]; then
     import Sheldon.Util.Array as Array
     # shellcheck disable=SC2154
