@@ -30,10 +30,8 @@ IFS=$'\n\t'
 declare -A Sheldon
 Sheldon_tmp=''
 Sheldon[registry]=
-Sheldon[dir]="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-Sheldon[root]="$(cd "$(dirname "${Sheldon[dir]}")" && pwd)"
-Sheldon[file]="${Sheldon[dir]}/$(basename "${BASH_SOURCE[0]}")"
-Sheldon[base]=$(basename "${Sheldon[file]}" .sh)
+Sheldon[root]="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+Sheldon[lib]="${Sheldon[root]}"
 
 SHELDON_LOG_LEVEL=1
 
@@ -141,18 +139,18 @@ _error() {
   case "$#" in
     0)
       # TODO: check for UTF-8 terminal before using Unicode.
-      printf "%b" "$(< "${Sheldon[dir]}/resources/templates/errors/0.tpl")"
+      printf "%b" "$(< "${Sheldon[root]}/resources/templates/errors/0.tpl")"
       ;;
 
     1)
-      string="$(< "${Sheldon[dir]}/resources/templates/errors/1.tpl")"
+      string="$(< "${Sheldon[root]}/resources/templates/errors/1.tpl")"
       placeholders=( ['message']="${1}" )
       Sheldon_tmp=$(Sheldon.Util.String.insert "${string}" placeholders)
       printf "%s" "${Sheldon_tmp}"
       ;;
 
     3|4)
-      string="$(< "${Sheldon[dir]}/resources/templates/errors/$#.tpl")"
+      string="$(< "${Sheldon[root]}/resources/templates/errors/$#.tpl")"
       # shellcheck disable=SC2034
       placeholders=( ['message']="${1}" ['line']="${2}" ['file']="${3}" )
       Sheldon_tmp=$(Sheldon.Util.String.insert "${string}" placeholders)
@@ -256,10 +254,10 @@ import() {
 
 
 # Source a few commonly used libraries.
-# shellcheck source=./core/Sheldon.sh
-. "${Sheldon[dir]}/core/Sheldon.sh"
-# shellcheck source=./core/Libraries.sh
-. "${Sheldon[dir]}/core/Libraries.sh"
+# shellcheck source=/dev/null
+. "${Sheldon[lib]}/core/Sheldon.sh"
+# shellcheck source=/dev/null
+. "${Sheldon[lib]}/core/Libraries.sh"
 
 # Set the traps.
 for sig in INT TERM EXIT; do

@@ -12,7 +12,7 @@
 BASE_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 
 # shellcheck disable=SC1090
-. "$BASE_DIR/../meemaw.sh"
+. "$BASE_DIR/../bootstrap.sh"
 set +o errtrace
 
 import Sheldon.Test.TestFrameworkInAFile as Test

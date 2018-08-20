@@ -4,7 +4,7 @@
 # sources is defined below and it can't be used until it's defined.
 # shellcheck source=/dev/null
 # shellcheck disable=SC2154
-. "${Sheldon[dir]}"/util/Array.sh
+. "${Sheldon[lib]}"/util/Array.sh
 
 #####
 # Locates and sources the script.
@@ -66,5 +66,5 @@ Sheldon.Core.Libraries.load() {
   path="${path}/${script}.sh"
 
   # TODO: Make sure the file is sourced only once in a shell.
-  . "${Sheldon[dir]}${path}"
+  . "${Sheldon[lib]}${path}"
 }

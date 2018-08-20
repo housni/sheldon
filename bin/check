@@ -37,7 +37,7 @@ declare files
 
 # If no args are provided, we'll look for files ourselves.
 if [[ $# -eq 0 ]]; then
-  files=( $(find "$BASEDIR/../../" -name "*.sh" -type f) )
+  files=( $(find "$BASEDIR/../lib/" -name "*.sh" -type f) )
 else
   files=( $@ )
 fi
