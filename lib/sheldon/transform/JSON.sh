@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-# Converts Bashs associative array into JSON.
+# Converts an associative Bash array into JSON.
 Sheldon.Transform.JSON.dumps() {
   local -n __shld_data
   local -a dump
