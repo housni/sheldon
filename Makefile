@@ -23,11 +23,16 @@ SHELL := bash
 .DELETE_ON_ERROR:
 .SUFFIXES:
 
-# Location where Sheldon will be installed.
-DESTDIR ?= /usr/lib/sheldon
+# Install executable
+INSTALL ?= install
+INSTALL_PROGRAM ?= $(INSTALL)
+INSTALL_DATA ?= $(INSTALL) -m 644
 
-# Docker executable.
+# Docker executable. Used for linting, testing, etc.
 DOCKER ?= docker
+
+# Directory Sheldon will be bind mounted to in Docker.
+MOUNT_PATH ?= /sheldon
 
 # Find the shell scripts to run 'shellcheck' against.
 # Default: All scripts ending with '.sh' in the project.
@@ -41,12 +46,15 @@ YAML_FILES ?= .travis.yml
 TEST_NAMES ?=
 
 # Version of Bash to test against.
-# Default: 4.3
 BASH_VERSION ?= 4.3
 
-# Directory Sheldon will be bind mounted to in Docker.
-# Default: $(DESTDIR)
-MOUNT_PATH ?= $(DESTDIR)
+NAME = sheldon
+PREFIX = $(DESTDIR)/usr/local
+BINDIR = $(PREFIX)/bin
+LIBDIR = $(PREFIX)/lib
+MANDIR = $(PREFIX)/share/man
+
+RM ?= rm
 
 # Target for detailed help.
 HELP_TARGET :=
@@ -58,7 +66,7 @@ BANNER_CHAR ?= \#
 # The prefix, in the banner, before displaying the name of the target.
 BANNER_PREFIX ?= TARGET: 
 
-# Returns the length of any skill.
+# Returns the length of any string.
 strlen = "$(shell declare some; some=$1; echo $${\#some}; )"
 
 # NAME
@@ -194,7 +202,12 @@ check.lint.shellcheck: prepare
 .PHONY: check.lint.sheldon
 check.lint.sheldon:
 	@$(MAKE) --no-print-directory TARGET_NAME=$@ _output.banner
-	@$(CURDIR)/linters/sheldon/check $(SHELL_SCRIPTS)
+	@$(DOCKER) run \
+		--rm \
+		--mount type=bind,source="$(CURDIR)",target=$(MOUNT_PATH),readonly \
+		-w "$(MOUNT_PATH)" \
+		sheldon \
+		./bin/check
 
 # NAME
 #     check.lint.yamllint - Runs 'yamllint' against YAML files.
@@ -322,7 +335,7 @@ check.test.unit: prepare
 		--mount type=bind,source="$(CURDIR)",target=$(MOUNT_PATH),readonly \
 		-w "$(MOUNT_PATH)" \
 		sheldon \
-		./test/test.sh $(TEST_NAMES)
+		./lib/sheldon/test/test.sh $(TEST_NAMES)
 
 # NAME
 #     all - See targets 'check', 'clean' and 'install'.
@@ -476,12 +489,14 @@ clean:
 # TODO
 # Installs Sheldon to $(DESTDIR) and adds docs.
 .PHONY: install
-install:
+install: check.test
+	@$(INSTALL_PROGRAM) -D $(CURDIR)/lib $(LIBDIR)/$(NAME)
 
 # TODO
 # Uninstalls Sheldon and docs
 .PHONY: uninstall
 uninstall:
+	@$(RM) -rf $(LIBDIR)/$(NAME)
 
 # TODO
 ## target: build-docs - Generate docs (Sphinx -> readthedocs/man pages).
