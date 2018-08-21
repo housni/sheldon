@@ -1,0 +1,26 @@
+#!/usr/bin/env bash
+
+#####
+# Prints every occurrence of 'eval' in Sheldons scripts ending with '.sh'.
+#####
+
+# Exit if any command exits with a non-zero exit status.
+set -e
+
+# Exit if script uses undefined variables.
+set -u
+
+# Prevent masking an error in a pipeline.
+#
+# Look at the end of the 'Use set -e' section for an excellent explanation.
+# See: https://www.davidpashley.com/articles/writing-robust-shell-scripts/
+set -o pipefail
+
+BASEDIR=$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)
+sheldon=$(readlink -f "${BASEDIR}"/../lib/sheldon/)
+occurrences=$(find "${sheldon}" -type f -name \*.sh -print0 \
+  | xargs -0 grep -n -e "[^#]*eval\s")
+
+printf "All occurrences of 'eval' in code: \n%s\n" "${occurrences}"
+
+exit $?

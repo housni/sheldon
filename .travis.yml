@@ -20,6 +20,8 @@ before_install:
 script:
   - make check.lint
   - make check.test
+after_success:
+  - make stats
 # When things go wrong, it's useful to have as much info as possible.
 after_failure:
   - id

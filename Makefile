@@ -49,12 +49,19 @@ TEST_NAMES ?=
 BASH_VERSION ?= 4.3
 
 NAME = sheldon
+
+# Path to Sheldon lib in this project.
+SHELDON_LIBS = ./lib/$(NAME)
+
+# To stop '--warn-undefined-variables' from whining.
+# See: https://www.gnu.org/prep/standards/html_node/DESTDIR.html
+DESTDIR ?=
+
+# A few install paths.
 PREFIX = $(DESTDIR)/usr/local
 BINDIR = $(PREFIX)/bin
-LIBDIR = $(PREFIX)/lib
+LIBDIR = $(PREFIX)/lib/
 MANDIR = $(PREFIX)/share/man
-
-RM ?= rm
 
 # Target for detailed help.
 HELP_TARGET :=
@@ -207,7 +214,7 @@ check.lint.sheldon:
 		--mount type=bind,source="$(CURDIR)",target=$(MOUNT_PATH),readonly \
 		-w "$(MOUNT_PATH)" \
 		sheldon \
-		./bin/check
+		./bin/check-convention
 
 # NAME
 #     check.lint.yamllint - Runs 'yamllint' against YAML files.
@@ -338,6 +345,25 @@ check.test.unit: prepare
 		./lib/sheldon/test/test.sh $(TEST_NAMES)
 
 # NAME
+#     stats - Gathers and displays stats about Sheldon.
+#
+# SYNOPSIS
+#     make stats
+#
+# DESCRIPTION
+#     Displays various stats about Sheldon such as the occrrences of 'eval's in the code.
+#
+.PHONY: stats
+stats: prepare
+	@$(MAKE) --no-print-directory TARGET_NAME=$@ _output.banner
+	@$(DOCKER) run \
+		--rm \
+		--mount type=bind,source="$(CURDIR)",target=$(MOUNT_PATH),readonly \
+		-w "$(MOUNT_PATH)" \
+		sheldon \
+		./bin/check-evals
+
+# NAME
 #     all - See targets 'check', 'clean' and 'install'.
 #
 # SYNOPSIS
@@ -347,7 +373,7 @@ check.test.unit: prepare
 #     See targets See targets 'check', 'clean' and 'install'.
 #
 .PHONY: all
-all: check clean install
+all: check clean install stats
 
 # NAME
 #     _output.banner - Display a prominent banner.
@@ -420,7 +446,7 @@ endif
 	}
 
 # NAME
-#     help - Display callable targets and manuals for individual targets.
+#     help - Display callable targets and manuals for individual targets using HELP_TARGET.
 #
 # SYNOPSIS
 #     make [OPTION]... help
@@ -489,14 +515,15 @@ clean:
 # TODO
 # Installs Sheldon to $(DESTDIR) and adds docs.
 .PHONY: install
-install: check.test
-	@$(INSTALL_PROGRAM) -D $(CURDIR)/lib $(LIBDIR)/$(NAME)
+install: $(SHELDON_LIBS)
+	@mkdir -p $(LIBDIR)/$(NAME)
+	@cp -r $(CURDIR)/lib/$(NAME) $(LIBDIR)
 
 # TODO
 # Uninstalls Sheldon and docs
 .PHONY: uninstall
 uninstall:
-	@$(RM) -rf $(LIBDIR)/$(NAME)
+	@rm -rf $(LIBDIR)/$(NAME)
 
 # TODO
 ## target: build-docs - Generate docs (Sphinx -> readthedocs/man pages).
