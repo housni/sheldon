@@ -206,4 +206,15 @@ ArrayTest.testUpdate() {
   $Test.it 'Should pass if custom array element overwrote the default one.' <<EOF
     [ -z "$difference" ]
 EOF
+
+  # shellcheck disable=SC2034
+  defaults=( ["key1"]="val1" ["key2"]="val2" ["key3"]="val3" )
+  # shellcheck disable=SC2034
+  options=(                  ["key2"]="custom value" ["foo"]="bar" ["baz"]="quux" )
+  expected=( ["key1"]="val1" ["key2"]="custom value" ["foo"]="bar" ["baz"]="quux" ["key3"]="val3" )
+  $Array.update defaults options
+  difference=$($Test.array_diff defaults expected)
+  $Test.it 'Should pass if custom array element overwrote the default one and appended remaining elements.' <<EOF
+    [ -z "$difference" ]
+EOF
 }

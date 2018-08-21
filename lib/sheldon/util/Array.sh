@@ -144,13 +144,23 @@ Sheldon.Util.Array.update() {
   local -n __shld_defaults
   local -n __shld_others
   local default
+  local others
 
   __shld_defaults="$1"
   __shld_others="$2"
 
+  # If corresponding value in '__shld_others' will overwrite the valye in '__shld_defaults'.
+  # Unset the key for that value in '__shld_others'.
   for default in "${!__shld_defaults[@]}"; do
     if [[ "${__shld_others[$default]+housni}" ]]; then
-      __shld_defaults["$default"]="${__shld_others[$default]}"
+      __shld_defaults["$default"]="${__shld_others["$default"]}"
+      unset __shld_others["$default"]
     fi
+
+  done
+
+  # Add remaining '__shld_others' to '__shld_defaults'.
+  for others in "${!__shld_others[@]}"; do
+    __shld_defaults["$others"]="${__shld_others["$others"]}"
   done
 }
