@@ -29,6 +29,7 @@ declare testFunc
 declare parsedFunc
 declare resolver
 declare functions
+declare -i status
 
 # shellcheck disable=SC2154
 # shellcheck disable=SC2086
@@ -95,3 +96,7 @@ done
 # shellcheck disable=SC2086
 $Test.summary
 #trap $Test.summary EXIT
+
+# shellcheck disable=SC2086
+status=$($Test.status)
+exit "$status"

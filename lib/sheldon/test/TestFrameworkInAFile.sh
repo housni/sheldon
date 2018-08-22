@@ -70,6 +70,14 @@ Sheldon.Test.TestFrameworkInAFile.summary() {
     "${_SKIP_COUNT}"
 }
 
+Sheldon.Test.TestFrameworkInAFile.status() {
+  if [[ $_TESTFAIL_ -gt 0 ]]; then
+    echo 1
+  else
+    echo 0
+  fi
+}
+
 Sheldon.Test.TestFrameworkInAFile.header() {
   local length
   local before
