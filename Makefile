@@ -512,32 +512,61 @@ help:
 .PHONY: clean
 clean:
 
-# TODO
-# Installs Sheldon to $(DESTDIR) and adds docs.
+# NAME
+#     install - Installs Sheldon.
+#
+# SYNOPSIS
+#     make install
+#
+# DESCRIPTION
+#     Installs Sheldon to 'LIBDIR'.
+#
 .PHONY: install
 install: $(SHELDON_LIBS)
 	@mkdir -p $(LIBDIR)/$(NAME)
 	@cp -r $(CURDIR)/lib/$(NAME) $(LIBDIR)
 
-# TODO
-# Uninstalls Sheldon and docs
+# NAME
+#     uninstall - Uninstalls Sheldon.
+#
+# SYNOPSIS
+#     make uninstall
+#
+# DESCRIPTION
+#     Uninstalls Sheldon from 'LIBDIR'.
+#
 .PHONY: uninstall
 uninstall:
 	@rm -rf $(LIBDIR)/$(NAME)
+
+# NAME
+#     hooks - See target 'hooks.git.precommit'.
+#
+# SYNOPSIS
+#     make hooks
+#
+# DESCRIPTION
+#     See target 'hooks.git.precommit'.
+#
+.PHONY: hooks
+hooks: hooks.git.precommit
+
+# NAME
+#     hooks.git.precommit - Installs git pre-commit hooks.
+#
+# SYNOPSIS
+#     make hooks.git.precommit
+#
+# DESCRIPTION
+#     Installs git precommit hooks by creating symlinks to them.
+#     These hooks do things like lint code and run unit tests.
+#
+.PHONY: hooks.git.precommit
+hooks.git.precommit:
+	@ln -s $(CURDIR)/hooks/pre-commit $(CURDIR)/.git/hooks/pre-commit
 
 # TODO
 ## target: build-docs - Generate docs (Sphinx -> readthedocs/man pages).
 #build-docs: | docs
 #   -rm -rf $@
 #   mkdir -p $@
-
-# TODO
-# Install all hooks
-.PHONY: hooks
-hooks: hooks.git.precommit
-
-# TODO
-# Installs git precommit hooks to run `make check` in order to make sure code
-# passes linting and unit tests before it can be committed..
-hooks.git.precommit:
-	@ln -s $(CURDIR)/hooks/pre-commit $(CURDIR)/.git/hooks/pre-commit
