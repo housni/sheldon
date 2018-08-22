@@ -540,3 +540,4 @@ hooks: hooks.git.precommit
 # Installs git precommit hooks to run `make check` in order to make sure code
 # passes linting and unit tests before it can be committed..
 hooks.git.precommit:
+	@ln -s $(CURDIR)/hooks/pre-commit $(CURDIR)/.git/hooks/pre-commit
