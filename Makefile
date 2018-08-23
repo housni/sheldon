@@ -446,7 +446,7 @@ endif
 	}
 
 # NAME
-#     help - Display callable targets and manuals for individual targets using HELP_TARGET.
+#     help - Display callable targets as well as manuals for individual targets using HELP_TARGET.
 #
 # SYNOPSIS
 #     make [OPTION]... help
@@ -469,12 +469,13 @@ endif
 #     make HELP_TARGET=check.lint.shellcheck help
 #         Displays the documentation for the 'shellcheck' target.
 #
-#     make HELP_TARGET=shel help
+#     make HELP_TARGET=check.lint.shel help
 #         Displays the documentation for any tagets that begin with 'shel' target.
 #
 .PHONY: help
 help:
-	@$(MAKE) --no-print-directory TARGET_NAME=$@ _output.banner
+	@HELP_BANNER="$@\n'usage: make [HELP_TARGET=<target_name>] help\nexample: make HELP_TARGET=check.test.unit help'"; \
+	$(MAKE) --no-print-directory TARGET_NAME="$${HELP_BANNER}" _output.banner
 	@{ \
 		start="# NAME" ;\
 		state=0 ;\
