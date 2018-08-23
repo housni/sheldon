@@ -42,7 +42,6 @@ echo "Running linters..."
 make check.lint
 echo "Running unit tests..."
 make check.test.unit
-echo "pre-commit: $?"
 
 echo "OK: Lints and unit tests complete."
 exit 0
