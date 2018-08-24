@@ -78,9 +78,7 @@ Sheldon.Transform.JSON.loads() {
               separator = colon
             }
             count++
-
             stack[indice] = separator
-            final = char
           }
         }
       }
