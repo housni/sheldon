@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-# See README.md in this dir for details.
+# See README.md in this dir for an explanation.
 #
 # Replaces placeholders in a template with parsed JSON configs and writes it to an Apache conf file..
 #
@@ -8,9 +8,12 @@
 #     $0 [dev|prod]
 #
 
+# Absolute path to the dir this script is in.
+BASE_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+
 # Bootstrap Sheldon.
 # shellcheck source=/dev/null
-. ../../lib/sheldon/bootstrap.sh
+. "$BASE_DIR"/../../lib/sheldon/bootstrap.sh
 
 # Use strict mode.
 Sheldon.Core.Sheldon.strict
@@ -18,9 +21,6 @@ Sheldon.Core.Sheldon.strict
 # Import required Sheldon modules.
 import Sheldon.Transform.JSON as JSON
 import Sheldon.Util.String as String
-
-# Absolute path to the dir this script is in.
-BASE_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 
 # shellcheck disable=SC2154
 # shellcheck disable=SC2086

@@ -1,8 +1,11 @@
 #!/usr/bin/env bash
 
+# Absolute path to the dir this script is in.
+BASE_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+
 # Bootstrap Sheldon.
 # shellcheck source=/dev/null
-. ../../lib/sheldon/bootstrap.sh
+. "$BASE_DIR"/../../lib/sheldon/bootstrap.sh
 
 # Use strict mode.
 Sheldon.Core.Sheldon.strict
@@ -18,12 +21,27 @@ something() {
   local -n __custom
 
   options=( ["key1"]="val1" ["key2"]="val2" ["key3"]="val3" )
-  __custom="${1}"
-  $Array.update options __custom
-
+  
+  echo "Default options:"
   for opt in "${!options[@]}"; do
     echo "$opt => ${options[$opt]}"
   done
+  echo
+
+  __custom="${1}"
+  echo "User options:"
+  for cust in "${!__custom[@]}"; do
+    echo "$cust => ${__custom[$cust]}"
+  done
+  echo
+
+  $Array.update options __custom
+
+  echo "Merged options:"
+  for opt in "${!options[@]}"; do
+    echo "$opt => ${options[$opt]}"
+  done
+  echo
 }
 
 declare -A custom
