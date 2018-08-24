@@ -1,4 +1,7 @@
-#
+# Project: Sheldon (https://github.com/housni/Sheldon)
+# Author: Housni Yakoob <housni.yakoob@gmail.com>
+# License: MIT (See 'LICENSE.txt')
+
 # Need help? Just do:
 #
 #    make help
@@ -14,12 +17,14 @@
 # Make sure all new targets are properly documented. Not documenting them means
 # they will not be discoverable via `make help` or `make HELP_TARGET=my_target_here help`.
 #
+# To debug:
+#     $ make -rRd <my_target>
 
 # Credits: http://clarkgrubb.com/makefile-style-guide
 MAKEFLAGS += --warn-undefined-variables
 SHELL := bash
 .SHELLFLAGS := -eu -o pipefail -c
-.DEFAULT_GOAL := all
+.DEFAULT_GOAL := help
 .DELETE_ON_ERROR:
 .SUFFIXES:
 
@@ -48,7 +53,7 @@ TEST_NAMES ?=
 # Version of Bash to test against.
 BASH_VERSION ?= 4.3
 
-NAME = sheldon
+NAME = $(shell basename $(CURDIR))
 
 # Path to Sheldon lib in this project.
 SHELDON_LIBS = ./lib/$(NAME)
