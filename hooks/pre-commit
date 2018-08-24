@@ -18,8 +18,6 @@ set -o pipefail
 
 # See: https://codeinthehole.com/tips/tips-for-using-a-git-pre-commit-hook/
 
-BASEDIR=$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)
-
 echo
 echo "-----------------------------"
 echo "| Sheldon pre-commit checks |"

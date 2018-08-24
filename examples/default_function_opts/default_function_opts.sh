@@ -1,11 +1,8 @@
 #!/usr/bin/env bash
 
-# Absolute path to the dir this script is in.
-BASE_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-
 # Bootstrap Sheldon.
 # shellcheck source=/dev/null
-. "$BASE_DIR"/../../lib/sheldon/bootstrap.sh
+. "${0%/*}/../../lib/sheldon/bootstrap.sh"
 
 # Use strict mode.
 Sheldon.Core.Sheldon.strict

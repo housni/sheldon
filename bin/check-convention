@@ -25,8 +25,6 @@ set -u
 # See: https://www.davidpashley.com/articles/writing-robust-shell-scripts/
 set -o pipefail
 
-BASEDIR=$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)
-
 declare -i exit
 declare regex
 declare -i line
@@ -37,7 +35,7 @@ declare files
 
 # If no args are provided, we'll look for files ourselves.
 if [[ $# -eq 0 ]]; then
-  files=( $(find "$BASEDIR/../lib/" -name "*.sh" -type f) )
+  files=( $(find "${0%/*}/../lib/" -name "*.sh" -type f) )
 else
   files=( $@ )
 fi

@@ -8,12 +8,9 @@
 #     $0 [dev|prod]
 #
 
-# Absolute path to the dir this script is in.
-BASE_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-
 # Bootstrap Sheldon.
 # shellcheck source=/dev/null
-. "$BASE_DIR"/../../lib/sheldon/bootstrap.sh
+. "${0%/*}/../../lib/sheldon/bootstrap.sh"
 
 # Use strict mode.
 Sheldon.Core.Sheldon.strict
@@ -37,14 +34,14 @@ resolve_apache_conf() {
   # from an S3 bucket for either dev or prod configs.
   #
   # Assign contents of config to a var.
-  json=$(cat "${BASE_DIR}/conf/apache-${1}-conf.json")
+  json=$(cat "${0%/*}/conf/apache-${1}-conf.json")
 
   # Parse the JSON, assigning the result to the variable `configs`.
   # shellcheck disable=SC2153
   $JSON.loads "$json" configs
 
   # Assign the contents of our vhost template to a var.
-  template=$(cat "${BASE_DIR}"/example.com.conf.tpl)
+  template=$(cat "${0%/*}/example.com.conf.tpl")
 
   # Replace placeholders in template with parsed JSON configs and echo result.
   $String.insert "$template" configs
@@ -60,6 +57,6 @@ deploy_env="${1:-dev}"
 result=$(resolve_apache_conf "${deploy_env}")
 
 # Write the resolved config to a file on disk.
-printf "%s" "$result" > "${BASE_DIR}"/example.com.conf
+printf "%s" "$result" > "${0%/*}/example.com.conf"
 
 exit 0

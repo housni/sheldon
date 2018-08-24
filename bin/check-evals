@@ -16,8 +16,7 @@ set -u
 # See: https://www.davidpashley.com/articles/writing-robust-shell-scripts/
 set -o pipefail
 
-BASEDIR=$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)
-sheldon=$(readlink -f "${BASEDIR}"/../lib/sheldon/)
+sheldon=$(readlink -f "${0%/*}/../lib/sheldon/")
 occurrences=$(find "${sheldon}" -type f -name \*.sh -print0 \
   | xargs -0 grep -n -e "[^#]*eval\s")
 
