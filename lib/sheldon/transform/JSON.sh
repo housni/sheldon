@@ -21,21 +21,24 @@ Sheldon.Transform.JSON.dumps() {
 Sheldon.Transform.JSON.loads() {
   local data
   local -n __shld_result
-  local token_1
-  local token_2
+  local colon
+  local comma
   data="$1"
   __shld_result="$2"
-  token_1="<sheldon>:<sheldon>"
-  token_2="<sheldon>,<sheldon>"
+  colon="<sheldon>:<sheldon>"
+  comma="<sheldon>,<sheldon>"
 
   # shellcheck disable=SC1004
-  serialized=$(gawk -v token_1="$token_1" -v token_2="$token_2" 'BEGIN {
+  serialized=$(gawk -v colon="$colon" -v comma="$comma" 'BEGIN {
       # States that affect "stack":
       # 0 = no-save
       # 1 = save
       # 2 = saving
       state = 0
       count = 0
+
+      # Indice of character inside "stack".
+      indice = 0
     }
     /"[^"]*"/ \
     {
@@ -45,7 +48,8 @@ Sheldon.Transform.JSON.loads() {
         #   current state is "save"
         #     and if the char is not }
         if (state >= 1 && 0 == match(chars[char], /\}/)) {
-          stack[char] = chars[char]
+          indice++
+          stack[indice] = chars[char]
           state = 2
         }
 
@@ -66,25 +70,21 @@ Sheldon.Transform.JSON.loads() {
           #   add a separator to "stack"
           #   store value of "char" since we will need it in the END section
           if (chars[char - 1] != "\\") {
-            delete stack[char]
+            delete stack[indice]
             state = 0
 
-            separator = token_2
+            separator = comma
             if ((count % 2) == 0) {
-              separator = token_1
+              separator = colon
             }
             count++
 
-            stack[char] = separator
+            stack[indice] = separator
             final = char
           }
         }
       }
     } END {
-      # Remove the last char since it will always be a comma
-      delete stack[final]
-      delete separators[final]
-
       for (item in stack) {
         printf "%s", stack[item]
       }
@@ -106,12 +106,11 @@ Sheldon.Transform.JSON.loads() {
 
   # Grab keys/values and set them in $__shld_result
   while [[ -n "$serialized" ]]; do
-    key=$(get_part "$serialized" "$token_1")
-    serialized="$(chop_string "$serialized" "$token_1" "$key")"
+    key=$(get_part "$serialized" "$colon")
+    serialized="$(chop_string "$serialized" "$colon" "$key")"
 
-    val="$(get_part "$serialized" "$token_2")"
-    serialized="$(chop_string "$serialized" "$token_2" "$val")"
-
+    val="$(get_part "$serialized" "$comma")"
+    serialized="$(chop_string "$serialized" "$comma" "$val")"
     # shellcheck disable=SC2034
     __shld_result["$key"]="$val"
   done

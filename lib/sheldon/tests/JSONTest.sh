@@ -50,8 +50,6 @@ JSONTest.testLoads() {
   {
     $JSON.loads "$json" result
     diff=$($Test.array_diff expected result)
-    diff=${diff//
-/}
     $Test.it 'Should pass if compact JSON string was converted to an associative Bash array.' <<EOF
     [[ -z "$diff" ]]
 EOF
@@ -64,14 +62,13 @@ EOF
   }'
   # shellcheck disable=SC2086
   $JSON.loads "$json" result
+  expected=( [one]="First" [two]="Second" [three]="Third" )
   # shellcheck disable=SC2086
   diff=$($Test.array_diff expected result)
-  diff=${diff//
-/}
+
   # shellcheck disable=SC2086
-  $Test.it 'Should pass if multiline JSON string was converted to an associative Bash array.' \
-    skip 'This has not been implemented.' <<EOF
-      [[ -z "\"$diff\"" ]]
+  $Test.it 'Should pass if multiline JSON string was converted to an associative Bash array.' <<EOF
+      [[ -z "$diff" ]]
 EOF
 
   result=()
