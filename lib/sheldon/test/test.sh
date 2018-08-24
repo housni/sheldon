@@ -9,10 +9,8 @@
 # Run ArrayTest.testFirst
 #  ./test.sh ArrayTest.testFirst
 
-BASE_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-
 # shellcheck disable=SC1090
-. "$BASE_DIR/../bootstrap.sh"
+. "${0%/*}/../bootstrap.sh"
 set +o errtrace
 
 import Sheldon.Test.TestFrameworkInAFile as Test
@@ -20,6 +18,7 @@ import Sheldon.Test.TestFrameworkInAFile as Test
 # Path to test file.
 declare testFile
 declare allTestFiles
+declare allTestPath
 # Basename of test file, $testFile.
 declare testFilename
 declare parsedFilename
@@ -27,7 +26,6 @@ declare testOutput
 declare testNamespace
 declare testFunc
 declare parsedFunc
-declare resolver
 declare functions
 declare -i status
 
@@ -35,8 +33,8 @@ declare -i status
 # shellcheck disable=SC2086
 $Test.header "Testing"
 
-resolver=$(command -v realpath) || "$(command -v readlink) -f"
-allTestFiles=$($resolver "$BASE_DIR"/../tests/*.sh)
+allTestPath=$(readlink -f "${0%/*}/../tests")
+allTestFiles="${allTestPath}/*.sh"
 
 for testFile in $allTestFiles; do
   testFilename=$(basename "${testFile}" .sh)
