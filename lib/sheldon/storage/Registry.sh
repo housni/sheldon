@@ -33,7 +33,7 @@
 # :returns: (void)
 #####
 Sheldon.Storage.Registry.set() {
-  Sheldon["registry.${1}"]="$2"
+  __SHELDON["registry.${1}"]="$2"
 }
 
 #####
@@ -50,5 +50,5 @@ Sheldon.Storage.Registry.set() {
 # :returns: (void)
 #####
 Sheldon.Storage.Registry.get() {
-  echo "${Sheldon[registry.${1}]}"
+  echo "${__SHELDON[registry.${1}]}"
 }

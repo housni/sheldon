@@ -1,2 +1,2 @@
-{:message} on line {:line} in '{:file}'
-Terminating...\n
+{{ message }} on line {{ line }} in '{{ file }}'
+Terminating...

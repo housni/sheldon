@@ -1,1 +1,1 @@
-{:message}\n
+{{ message }}

@@ -1,1 +1,1 @@
-{:message} on line {:line} in '{:file}'\n
+{{ message }} on line {{ line }} in '{{ file }}'

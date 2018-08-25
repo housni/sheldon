@@ -1,1 +1,1 @@
-\xE2\x99\xAC  Soft kitty, warm kitty, you have an unknown ERROR! \xE2\x99\xAC\n
+\xE2\x99\xAC  Soft kitty, warm kitty, you have an unknown ERROR! \xE2\x99\xAC

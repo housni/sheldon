@@ -27,18 +27,16 @@ IFS=$'\n\t'
 
 # Setting and reserving some of Sheldons variables.
 # We know he doesn't like it when someone is in his spot.
-declare -A Sheldon
-Sheldon_tmp=''
-Sheldon[registry]=
-Sheldon[root]="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-Sheldon[lib]="${Sheldon[root]}"
-
-SHELDON_LOG_LEVEL=1
+declare -A __SHELDON
+__SHELDON[registry]=
+__SHELDON[root]="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+__SHELDON[lib]="${__SHELDON[root]}"
+__SHELDON[log_level]=1
 
 # Logs text to screen with formatting to make it easier to catch in the midst
 # of a lot of output.
 #
-#   SHELDON_LOG_LEVEL=1
+#   __SHELDON[log_level]=1
 #   declare -a SHELDON_LOG_ARGS
 #   SHELDON_LOG_ARGS=(
 #       3         # Top/bottom padding of 3 lines
@@ -52,7 +50,7 @@ SHELDON_LOG_LEVEL=1
 # $3 (string, optional, default="") This will 'prepend' $1.
 # $4 (string, optional, default="") This will 'postpend' $1.
 _log() {
-    if [[ $SHELDON_LOG_LEVEL -eq 0 ]]; then
+    if [[ ${__SHELDON[log_level]} -eq 0 ]]; then
         return
     fi
 
@@ -139,22 +137,23 @@ _error() {
   case "$#" in
     0)
       # TODO: check for UTF-8 terminal before using Unicode.
-      printf "%b" "$(< "${Sheldon[root]}/resources/templates/errors/0.tpl")"
+      # shellcheck disable=SC1117
+      printf "%b\n" "$(< "${__SHELDON[root]}/resources/templates/errors/0.tpl")"
       ;;
 
     1)
-      string="$(< "${Sheldon[root]}/resources/templates/errors/1.tpl")"
+      string="$(< "${__SHELDON[root]}/resources/templates/errors/1.tpl")"
       placeholders=( ['message']="${1}" )
-      Sheldon_tmp=$(Sheldon.Util.String.insert "${string}" placeholders)
-      printf "%s" "${Sheldon_tmp}"
+      # shellcheck disable=SC1117
+      printf "%s\n" "$(Sheldon.Util.String.insert "${string}" placeholders)"
       ;;
 
     3|4)
-      string="$(< "${Sheldon[root]}/resources/templates/errors/$#.tpl")"
+      string="$(< "${__SHELDON[root]}/resources/templates/errors/$#.tpl")"
       # shellcheck disable=SC2034
       placeholders=( ['message']="${1}" ['line']="${2}" ['file']="${3}" )
-      Sheldon_tmp=$(Sheldon.Util.String.insert "${string}" placeholders)
-      printf "%s" "${Sheldon_tmp}"
+      # shellcheck disable=SC1117
+      printf "%s\n" "$(Sheldon.Util.String.insert "${string}" placeholders)"
       ;;
 
     *)
@@ -252,12 +251,11 @@ import() {
 #   fi
 # }
 
-
 # Source a few commonly used libraries.
 # shellcheck source=/dev/null
-. "${Sheldon[lib]}/core/Sheldon.sh"
+. "${__SHELDON[lib]}/core/Sheldon.sh"
 # shellcheck source=/dev/null
-. "${Sheldon[lib]}/core/Libraries.sh"
+. "${__SHELDON[lib]}/core/Libraries.sh"
 
 # Set the traps.
 for sig in INT TERM EXIT; do

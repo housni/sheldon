@@ -20,7 +20,7 @@ RegistryTest.testSet() {
   expected="bar"
   $Registry.set "$arg" "$expected"
   $Test.it "Should pass if the value of the key '$arg' has been set to '$expected' ." <<EOF
-     [[ ${Sheldon[registry.${arg}]} = "$expected" ]]
+     [[ ${__SHELDON[registry.${arg}]} = "$expected" ]]
 EOF
 }
 
@@ -32,7 +32,7 @@ RegistryTest.testGet() {
 
   rand="$(mktemp -u)"
   arg="${rand}foo"
-  Sheldon["registry.${arg}"]="bar"
+  __SHELDON["registry.${arg}"]="bar"
   expected="bar"
   # shellcheck disable=SC2086
   result=$($Registry.get "$arg")
