@@ -546,29 +546,29 @@ uninstall:
 	@rm -rf $(LIBDIR)/$(NAME)
 
 # NAME
-#     hooks - See target 'hooks.git.precommit'.
+#     hooks - See target 'install.hooks.git'.
 #
 # SYNOPSIS
 #     make hooks
 #
 # DESCRIPTION
-#     See target 'hooks.git.precommit'.
+#     See target 'install.hooks.git'.
 #
 .PHONY: hooks
-hooks: hooks.git.precommit
+hooks: install.hooks.git
 
 # NAME
-#     hooks.git.precommit - Installs git pre-commit hooks.
+#     install.hooks.git - Installs git pre-commit hooks.
 #
 # SYNOPSIS
-#     make hooks.git.precommit
+#     make install.hooks.git
 #
 # DESCRIPTION
 #     Installs git precommit hooks by creating symlinks to them.
 #     These hooks do things like lint code and run unit tests.
 #
-.PHONY: hooks.git.precommit
-hooks.git.precommit:
+.PHONY: install.hooks.git
+install.hooks.git:
 	@ln -s $(CURDIR)/hooks/pre-commit $(CURDIR)/.git/hooks/pre-commit
 
 # TODO
@@ -576,3 +576,19 @@ hooks.git.precommit:
 #build-docs: | docs
 #   -rm -rf $@
 #   mkdir -p $@
+
+# NAME
+#     git.precommit - Runs linters/unit tests.
+#
+# SYNOPSIS
+#     make git.precommit
+#
+# DESCRIPTION
+#     This is meant to be run as a git hook, just before a commit.
+#     First install the hooks with `make install.hooks.git`, make changes to
+#     your code and attempt to commit. At that point, this target will run.
+#
+.PHONY: git.precommit
+git.precommit:
+	@$(MAKE) --no-print-directory check.lint
+	@$(MAKE) --no-print-directory check.test.unit

@@ -35,6 +35,69 @@ git stash save -q --keep-index "$STASH_NAME"
 # Pop git stash on exit.
 trap "echo 'Popping git stash'; git stash pop -q" EXIT
 
+make git.precommit
+
+echo "OK: Lints and unit tests complete."
+exit 0
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+# Exit if any command exits with a non-zero exit status.
+set -e
+
+# Exit if script uses undefined variables.
+set -u
+
+# Prevent masking an error in a pipeline.
+#
+# Look at the end of the 'Use set -e' section for an excellent explanation.
+# See: https://www.davidpashley.com/articles/writing-robust-shell-scripts/
+set -o pipefail
+
+# See: https://codeinthehole.com/tips/tips-for-using-a-git-pre-commit-hook/
+
+echo
+echo "-----------------------------"
+echo "| Sheldon pre-commit checks |"
+echo "-----------------------------"
+echo
+
+declare STASH_NAME
+declare STASHES
+STASH_NAME="pre-commit-$(date +%s)"
+
+# Stash files.
+echo "Saving git stash with name '$STASH_NAME'"
+git stash save -q --keep-index "$STASH_NAME"
+
+# Pop git stash on exit.
+trap "echo 'Popping git stash'; git stash pop -q" EXIT
+
 # Run our checks...
 echo "Running linters..."
 make check.lint
