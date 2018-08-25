@@ -13,7 +13,7 @@ import Sheldon.Util.Array as Array
 # shellcheck disable=SC2154
 # shellcheck disable=SC2086
 # shellcheck disable=SC2034
-something() {
+overwrite_values() {
   local -A options
   local -n __custom
 
@@ -44,5 +44,5 @@ something() {
 declare -A custom
 # shellcheck disable=SC2034
 custom=( ["key2"]="custom value" ["another"]="foo" ["bar"]="baz" )
-# Overwrite some values in 'something()' with values passed in via 'custom'.
-something custom
+# Overwrite some values in 'overwrite_values()' with values passed in via 'custom'.
+overwrite_values custom
