@@ -1,8 +1,6 @@
 #!/usr/bin/env bash
 
-# See README.md in this dir for an explanation.
-#
-# Replaces placeholders in a template with parsed JSON configs and writes it to an Apache conf file..
+# Replaces placeholders in a template with parsed JSON configs and writes it to an Apache conf file.
 #
 # SYNOPSIS
 #     $0 [dev|prod]
