@@ -102,10 +102,10 @@ strlen = "$(shell declare some; some=$1; echo $${\#some}; )"
 #
 .PHONY: prepare
 prepare:
-	@$(MAKE) --no-print-directory TARGET_NAME=$@ _output.banner
-	@$(DOCKER) pull "sdesbure/yamllint"
-	@$(DOCKER) build --rm -t sheldon ./
-	@$(DOCKER) pull "koalaman/shellcheck:stable"
+	@echo; echo "Sheldon is working. Please wait..."; echo
+	@$(DOCKER) pull "sdesbure/yamllint" 2>&1 >/dev/null
+	@$(DOCKER) build --rm -t sheldon ./ 2>&1 >/dev/null
+	@$(DOCKER) pull "koalaman/shellcheck:stable" 2>&1 >/dev/null
 
 # NAME
 #     check - See targets 'check.lint' and 'check.test.unit'.
