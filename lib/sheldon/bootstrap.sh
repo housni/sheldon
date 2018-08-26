@@ -1,15 +1,7 @@
 #!/usr/bin/env bash
 
-################################################################################
-# Sheldon: The not-so-bashful Bash framework. Bazinga!
-#
-# @namespace N/A
-# @copyright Copyright 2015, Housni Yakoob (http://housni.org)
-# @license http://opensource.org/licenses/bsd-license.php The BSD License
-################################################################################
-
 # Version check.
-# Sheldon is only supported on bash 4.3
+# Sheldon is only supported on bash 4.3+
 # We are assuming that the shell is Bash, though.
 [[ ${BASH_VERSION} =~ ([^\.]).([^\.])* ]]
 if [[ ${BASH_REMATCH[1]} -lt 4
