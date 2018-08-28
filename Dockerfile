@@ -1,11 +1,8 @@
 FROM bash:4.3
-MAINTAINER Housni Yakoob <housni.yakoob@gmail.com>
+LABEL maintainer="housni.yakoob@gmail.com"
 
-RUN apk update && apk upgrade && apk add py-pip
+RUN set -ex; \
+    apk add --no-cache \
+        gawk
 
-RUN apk add --update \
-    py-pip \
-  && pip install sphinx \
-  && rm -rf /var/cache/apk/
-
-WORKDIR /usr/lib/sheldon
+CMD ["bash"]

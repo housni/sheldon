@@ -1,1 +1,0 @@
-{:message} on line {:line} in '{:file}'\n

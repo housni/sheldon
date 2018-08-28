@@ -1,0 +1,79 @@
+#!/usr/bin/env bash
+
+#####
+# See: https://github.com/housni/Sheldon/issues/12
+#
+# Due to the issue above where variables passed by reference must have a prefix
+# of '__shld_', I had to write a quick check for this sort of thing.
+#
+# All this script does is:
+# 1. Find all shell scripts and goes through each line looking for string that begins with 'local -n'.
+# 2. Once matched, it checks to see if the characters following that are '__shld_'.
+# 3. If not matched, spit out errors and exit with 1.
+# 4. Else, continue.
+#####
+
+# Exit if any command exits with a non-zero exit status.
+set -e
+
+# Exit if script uses undefined variables.
+set -u
+
+# Prevent masking an error in a pipeline.
+#
+# Look at the end of the 'Use set -e' section for an excellent explanation.
+# See: https://www.davidpashley.com/articles/writing-robust-shell-scripts/
+set -o pipefail
+
+declare -i exit
+declare regex
+declare -i line
+declare shld_prefix
+declare good_part
+declare -i error_pos
+declare files
+
+# If no args are provided, we'll look for files ourselves.
+if [[ $# -eq 0 ]]; then
+  files=( $(find "${0%/*}/../lib/" -name "*.sh" -type f) )
+else
+  files=( $@ )
+fi
+
+exit=0
+# Basically, match 'local -n *'
+regex="^[^[:alpha:]]*local\s+-n\s+(.*)"
+shopt -s globstar
+echo "------------------------"
+echo "| Sheldon Rule Checker |"
+echo "------------------------"
+for file in "${files[@]}"; do
+  line=0
+  while IFS= read -r content; do
+    line=$(( $line + 1 ))
+    if [[ $content =~ $regex ]]; then
+      shld_prefix="${BASH_REMATCH[1]}"
+      shld_prefix="${shld_prefix:0:7}"
+      if [[ "$shld_prefix" != "__shld_" ]]; then
+        exit=1
+        good_part=${content%%${BASH_REMATCH[1]}*}
+        error_pos=${#good_part}
+        file=$(readlink -f "$file")
+        echo
+        echo "In $file line $line:"
+        echo "${content}"
+        for ((i=1; i<=$error_pos; i++)); do
+          printf " "
+        done
+        printf "%s\n" "^-- SHLD001: Variables passed by reference must be prefixed with '__shld_'. See: https://github.com/housni/Sheldon/issues/12"
+        echo
+      fi
+    fi
+  done < "$file"
+done
+shopt -u globstar
+
+if [[ $exit -eq 0 ]]; then
+  echo "OK"
+fi
+exit $exit
