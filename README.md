@@ -1,12 +1,13 @@
-# Sheldon
+
+[![Build Status](https://travis-ci.org/housni/Sheldon.svg?branch=master&style=flat-square)](https://travis-ci.org/housni/Sheldon)  [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg?style=flat-square)](http://makeapullrequest.com) [![MIT Licensed](https://img.shields.io/badge/license-MIT-blue.svg?style=flat-square)](https://github.com/housni/Sheldon/blob/master/LICENSE)
+
+# Sheldon - a Bash 4.3+ library
 Sheldon is a Bash 4.3+ library that is intuitive and easy to use, developed using Test Driven Development (TDD).
 
 - Bash 4.3+
 - Uses Test Driven Development
 - Intuitive
 - Easy
-
-[![Build Status](https://travis-ci.org/housni/Sheldon.svg?branch=master&style=flat-square)](https://travis-ci.org/housni/Sheldon)  [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg?style=flat-square)](http://makeapullrequest.com) [![MIT Licensed](https://img.shields.io/badge/license-MIT-blue.svg?style=flat-square)](https://github.com/housni/Sheldon/blob/master/LICENSE)
 
 # Table of Contents
 - [Overview](#overview)
@@ -18,7 +19,7 @@ Sheldon is a Bash 4.3+ library that is intuitive and easy to use, developed usin
 - [Getting Started](#getting-started)
     - [Basic](#basic)
     - [Advanced](#advanced)
-- [Help/Manual](#help-manual)
+- [Help/Manual](#helpmanual)
 - [Examples](#examples)
 - [Special Variables](#special-variables)
 - [Features](#features)
@@ -47,16 +48,16 @@ Sheldon is a Bash 4.3+ library that is intuitive and easy to use, developed usin
 # Overview
 [(Back to top)](#table-of-contents) | [Why Sheldon?](#why-sheldon)
 
-Sheldon is named after Sheldon Cooper in The Big Bang Theory :)
+Sheldon is named after [Sheldon Cooper](https://en.wikipedia.org/wiki/Sheldon_Cooper) from [The Big Bang Theory](https://en.wikipedia.org/wiki/The_Big_Bang_Theory) :)
 
-As a DevOps Engineer, I had a many [Bash](https://en.wikipedia.org/wiki/Bash_(Unix_shell)) utility functions that I had created over the years. I kept sourcing the various files in order to use them. I then decided to put them all together into an easily usable way, and so, Sheldon was born. BAZINGA!
+As a DevOps Engineer, I had many [Bash](https://en.wikipedia.org/wiki/Bash_(Unix_shell)) utility functions that I had written over the years. I kept sourcing the various files in order to use them. I then decided to put them all together into an easily usable way, and so, Sheldon was born. BAZINGA!
 
-Sheldon is a combination of Bash functions that do a lot of the heavy lifting for common scripting tasks. The functions are implemented in pure Bash, where possible, without external dependencies. This ensures that if a dependency is missing in an environment, the code won't fail. While Bash might be relatively slow in execution, it's certainly going to run faster than if you had to first install a dependency and then use it.
+Sheldon is a combination of Bash functions that do a lot of the heavy lifting of common scripting tasks. The functions are implemented in pure Bash, where possible, without external dependencies. This ensures that if a dependency is missing in an environment, a command won't fail. While Bash might be relatively slow in execution, it's certainly going to run faster than if you had to first install a dependency and then use it.
 
-For example, if you wanted to manipulate JSON objects during your CI build process, you might use [`jq`](https://github.com/stedolan/jq/), which is a fantastic tool. However, this usually involves installing `jq` and then using it. Sheldon can work with simple JSON objects which means, you wouldn't have any dependencies and you can just use Sheldon to process your simple JSON objects. An example of this can be seen at [examples/resolve_apache_conf/resolve_apache_conf.sh](examples/resolve_apache_conf/resolve_apache_conf.sh).
+For example, if you wanted to manipulate JSON objects during your CI build process, you might use [`jq`](https://github.com/stedolan/jq/), which is a fantastic tool. However, this usually involves installing `jq` and then using it. Sheldon can work with simple JSON objects which means, you wouldn't have any dependencies and you can use Sheldon without external dependencies (except `gawk` which is quite a common tool on most servers) to process your simple JSON objects. An example of this can be seen at [examples/resolve_apache_conf/resolve_apache_conf.sh](examples/resolve_apache_conf/resolve_apache_conf.sh).
 
 ## Why Sheldon?
-[(Back to top)](#table-of-contents) | [(Overview)](#overview)
+[(Back to top)](#table-of-contents) | [Overview](#overview)
 
 Many Bash libraries and frameworks out there require you to learn a few specific conventions in order to use them. You usually can't install the framework and start coding without first getting familiar with a few of those conventions.
 
@@ -70,10 +71,10 @@ There are various ways to install Sheldon. [Install with GNU Make (recommended)]
 ## Requirements
 [(Back to top)](#table-of-contents) | [Install](#install)
 - Bash 4.3+
-- GNU Make (preferable)
-- gawk (only if you plan to use the `Sheldon.Transform.JSON.loads()` function)
+- GNU Make (for the recommended installation method)
+- `gawk` (only if you plan to use the `Sheldon.Transform.JSON.loads()` function)
 
-**Why Bash version 4.3?** I wanted Sheldon to use associative arrays and the only way to do that without using [`eval`](http://wiki.bash-hackers.org/commands/builtin/eval), which I wanted to avoid as much as possible, is by passing arrays by reference which was a feature only introduced in version 4.3.
+**Why Bash version 4.3?** I wanted Sheldon to use associative arrays and the only way to do that without using [`eval`](http://wiki.bash-hackers.org/commands/builtin/eval) (which I wanted to avoid as much as possible) is by passing arrays by reference which was a feature only introduced in version 4.3.
 
 ## Install with GNU Make (recommended)
 [(Back to top)](#table-of-contents) | [Install](#install)
@@ -97,7 +98,7 @@ There are various ways to install Sheldon. [Install with GNU Make (recommended)]
     ```
 2. Copy it to `/usr/local/lib`
     ```bash
-    $ sudo cp -r ./lib/sheldon /usr/local/lib
+    $ cp -r ./lib/sheldon /usr/local/lib
     ```
 3. [Start using Sheldon](#basic)
 
@@ -105,8 +106,8 @@ There are various ways to install Sheldon. [Install with GNU Make (recommended)]
 [(Back to top)](#table-of-contents) | [Basic](#basic) | [Advanced](#advanced)
 
 In order to start using Sheldon, you'll need to:
-1. bootstrap
-2. turn on "strict mode"
+1. Bootstrap
+2. Turn on "strict mode"
 
 Bootstrapping is done by sourcing `/usr/local/lib/sheldon/bootstrap.sh` in your shell script and then, optionally but preferably, enabling "strict mode":
 ```bash
@@ -123,7 +124,7 @@ Sheldon.Core.Sheldon.strict
 Strict mode is not required but it's very highly recommended. It will essentially cause Bash to warn you of things that could lead to potential bugs in your code like undefined variables. It will also cause your script to terminate in the case of a command exiting with a non-zero exit status.
 
 ## Basic
-[(Back to top)](#table-of-contents) | [(Getting Started)](#getting-started)
+[(Back to top)](#table-of-contents) | [Getting Started](#getting-started)
 
 In `basic.sh` below,, the [`String.join()`](lib/sheldon/util/String.sh) function is used to combine space delimited text using a forward slash.
 
@@ -160,9 +161,9 @@ Path is 'foo/bar/baz' with length '11'.
 ```
 
 ## Advanced
-[(Back to top)](#table-of-contents) | [(Getting Started)](#getting-started)
+[(Back to top)](#table-of-contents) | [Getting Started](#getting-started)
 
-The [`examples/resolve_apache_conf/resolve_apache_conf.sh`](examples/resolve_apache_conf/resolve_apache_conf.sh) script is a well commented example tht shows a relatively advanced use of Sheldon.
+The [`examples/resolve_apache_conf/resolve_apache_conf.sh`](examples/resolve_apache_conf/resolve_apache_conf.sh) script is a well commented example that shows a relatively advanced use of Sheldon.
 
 # Help/Manual
 [(Back to top)](#table-of-contents)
@@ -187,34 +188,34 @@ Some useful examples:
 ## Simple JSON support
 [(Back to top)](#table-of-contents) | [Features](#features)
 
-Using its [JSON module](lib/sheldon/transform/JSON.sh), Sheldon can convert a Bash associative array into a simple JSON object using the `Sheldon.Transform.JSON.dumps()` function. Conversely, Sheldon can also convert a simple JSON object into a Bash associative array using the `Sheldon.Transform.JSON.loads()` function.
+Using its [JSON module](lib/sheldon/transform/JSON.sh), Sheldon can convert an associative Bash array into a simple JSON object using the `Sheldon.Transform.JSON.dumps()` function. Conversely, Sheldon can also convert a simple JSON object into an associative Bash array using the `Sheldon.Transform.JSON.loads()` function.
 
 ## Makefile is friendly
 [(Back to top)](#table-of-contents) | [Features](#features)
 
-The Makefile is very well documented and the `help` target has a lot to offer in terms of helping you figure out what Makefile can do.
+The Makefile is very well documented and the `help` target has a lot to offer in terms of helping you figure out what the Makefile can do.
 
-For more details, look at [help](#help) or just do `make HELP_TARGET=help help`.
+For more details, look at [help](#help) or just type `make HELP_TARGET=help help` in your terminal while in the root directory.
 
 ## Own test framework
 [(Back to top)](#table-of-contents) | [Features](#features)
 
-Sheldon needed a simple yet effective way to run tests against the code. Instead of using a full-blown test framework, I put together the [TestFrameworkInAFile.sh script](lib/sheldon/test/TestFrameworkInAFile.sh) which is quite easy to use and lets you run `setUp()` and `tearDown()` before and after tests.
+Sheldon needed a simple yet effective way to run tests against its code base. Instead of using a full-blown test framework, I put together the [TestFrameworkInAFile.sh script](lib/sheldon/test/TestFrameworkInAFile.sh) which is quite easy to use and lets you run `setUp()` and `tearDown()` before and after tests, respectively.
 
 ## Custom rule checker
 [(Back to top)](#table-of-contents) | [Features](#features)
 
-Sheldon has a specific [naming convention](naming-convention). As human beings, we will make mistakes which is why I wrote `bin/check-convention` which runs on `make check.lint.sheldon` (among other events such as git pre-commit hooks, [when installed](setting-up-dev)). This ensures that all our code follows convention and nothing breaks.
+Sheldon developers have to follow a [naming convention](naming-convention). As human beings, we will make mistakes which is why I wrote `bin/check-convention` which runs on `make check.lint.sheldon` (among other events such as git pre-commit hooks, [when installed](setting-up-dev)). This ensures that all our code follows convention and nothing breaks.
 
 ## Intuitive interface
 [(Back to top)](#table-of-contents) | [Features](#features)
 
-Sheldon was written while referring to the Python 3 manual. As such, you may find that a lot of the functions in Sheldon are similar to Python functions, making it easier for Python developers to understand what some functions do.
+Sheldon was written while referring to the Python 3 manual. As such, you may find that a lot of the functions in Sheldon are similar to Python functions, making it easier for Python developers to understand what some functions do just by looking at the name.
 
 ## Easy to use
 [(Back to top)](#table-of-contents) | [Features](#features)
 
-Sheldon uses the same 'ol Bash syntax meaning you don't have to learn a new syntax to use it. Bash is not meant to use OOP and so I didn't implement Sheldon using OOP meaning we can stick to the Bash syntax we are all used to when working with Sheldon.
+Sheldon uses the same 'ol Bash syntax which means you don't have to learn a new syntax in order to use it. Bash is not meant to use OOP and so I didn't implement Sheldon using OOP which means we can stick to the Bash syntax we are all used to when working with Sheldon.
 
 # Philosophy
 [(Back to top)](#table-of-contents) | [Avoid eval, where possible](#avoid-eval-where-possible) | [Documentation is gold](#documentation-is-gold) | [Where possible, use pure Bash](#where-possible-use-pure-bash)
@@ -222,7 +223,7 @@ Sheldon uses the same 'ol Bash syntax meaning you don't have to learn a new synt
 ## Avoid `eval`, where possible
 [(Back to top)](#table-of-contents) | [Philosophy](#philosophy)
 
-The dangers of the `eval` builtin are well known. With that in mind, I avoided using `eval` as much as possible. Right now, there are only two instances of `eval` used in Sheldon. You can actually check this yourself by running:
+The dangers of the `eval` Bash builtin are well known. With that in mind, I avoided using `eval` as much as possible. Right now, there are only two instances of `eval` used in Sheldon. You can actually check this yourself by running:
 ```bash
 $ make stats
 ```
@@ -239,7 +240,7 @@ All occurrences of 'eval' in code:
 /sheldon/lib/sheldon/bootstrap.sh:209:    eval "$3"="$1"
 /sheldon/lib/sheldon/test/TestFrameworkInAFile.sh:45:    eval "$line"
 ```
-As you can see, `eval` is only used in bootstrap.sh on line 209 (which is inside the `import()` function) and `TestFrameworkInAFile.sh` which uses `eval` in order to execute test cases.
+As you can see from the output above, `eval` is only used in bootstrap.sh on line 209 (which is inside the `import()` function) and `TestFrameworkInAFile.sh` which uses `eval` in order to execute test cases.
 
 ## Documentation is gold
 [(Back to top)](#table-of-contents) | [Philosophy](#philosophy)
@@ -251,7 +252,7 @@ Nobody's going to use something if they don't know how to use it. That's why I h
 ## Where possible, use pure Bash
 [(Back to top)](#table-of-contents) | [Philosophy](#philosophy)
 
-In most cases, we are discouraged from installing tools/dependencies on servers where possible. We can almost always do what we need to do, in most cases, using Bash. So, where possible, functions are using pure Bash instead of external tools.
+In most cases, we are discouraged from installing tools/dependencies on servers. We can almost always do what we need to do using Bash. So, where possible, functions use pure Bash instead of external tools.
 
 # Developer
 [(Back to top)](#table-of-contents) | [Prerequisites](#prerequisites) | [Setting up dev](#setting-up-dev) | [Naming Convention](#naming-convention) | [Style guide](#style-guide) | [Running Tests](#running-tests) | [Help](#help)
@@ -290,8 +291,6 @@ The `make hooks` command places `git` hooks in the appropriate directories. Thes
 
 In Sheldon, arrays are passed into functions by reference. When a variable is passed by reference, the corresponding variable name, inside the function, must be prefixed with `__shld_` to avoid a "circular name reference" error in Bash.
 
-For example:
-
 ### Bad
 Contents of bad.sh:
 ```bash
@@ -316,7 +315,7 @@ Output:
 $ ./bad.sh
 ./bad.sh: line 9: warning: foo: circular name reference
 ```
-The error is caused by using a variable, `foo`, with the same name inside and outside the function when the variable is passed by reference (via `local -n ...`).
+The error is caused by using a variable, `foo`, with the same name inside as well as outside the function when the variable is passed by reference (via `local -n ...`).
 
 ### Good
 Contents of good.sh:
@@ -363,7 +362,11 @@ The above would run all the tests in the [`lib/sheldon/tests/`](lib/sheldon/test
 ## Help
 [(Back to top)](#table-of-contents) | [Developer](#developer)
 
-As a developer, you might want to know what you can do with the Makefile. One way to figure this out is by digging through the Makefile. Sheldon has a target named `help` which will list all available targets in the Makefile. Once you find the target you want more details about, you can get more details about that target. Note that only targets that are documented in a specific format as seen in the Makefile will be recognized as targets for which help information would be output.
+As a developer, you might want to know what you can do with the Makefile. One way to figure this out is by digging through the Makefile.
+
+Sheldon has a target named `help` which will list all available targets in the Makefile.
+
+Once you find the target you want more details about, you can get more details about that target. Note that only targets that are documented in a specific format as seen in the Makefile will be recognized as targets for which help information would be output.
 
 - Lists available targets in Makefile.
     ```bash
@@ -457,7 +460,10 @@ For more details on how to get help, just do `make HELP_TARGET=help help`. That 
 # Uninstall
 [(Back to top)](#table-of-contents)
 
-    $ make uninstall
+To uninstall Sheldon (`rm -rf` it from it's install location):
+```bash
+$ make uninstall
+```
 
 # License
 [(Back to top)](#table-of-contents)
