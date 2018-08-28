@@ -1,5 +1,4 @@
-
-[![Build Status](https://travis-ci.org/housni/Sheldon.svg?branch=master&style=flat-square)](https://travis-ci.org/housni/Sheldon)  [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg?style=flat-square)](http://makeapullrequest.com) [![MIT Licensed](https://img.shields.io/badge/license-MIT-blue.svg?style=flat-square)](https://github.com/housni/Sheldon/blob/master/LICENSE)
+[![Build Status](https://travis-ci.org/housni/sheldon.svg?branch=master&style=flat-square)](https://travis-ci.org/housni/sheldon)  [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg?style=flat-square)](http://makeapullrequest.com) [![MIT Licensed](https://img.shields.io/badge/license-MIT-blue.svg?style=flat-square)](https://github.com/housni/sheldon/blob/master/LICENSE)
 
 # Sheldon - a Bash 4.3+ library
 Sheldon is a Bash 4.3+ library that is intuitive and easy to use, developed using Test Driven Development (TDD).
