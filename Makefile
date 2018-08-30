@@ -36,6 +36,8 @@ INSTALL_DATA ?= $(INSTALL) -m 644
 # Docker executable. Used for linting, testing, etc.
 DOCKER ?= docker
 
+DOCKER_IMG_NAME ?= sheldon
+
 # Directory Sheldon will be bind mounted to in Docker.
 MOUNT_PATH ?= /sheldon
 
@@ -218,7 +220,7 @@ check.lint.sheldon:
 		--rm \
 		--mount type=bind,source="$(CURDIR)",target=$(MOUNT_PATH),readonly \
 		-w "$(MOUNT_PATH)" \
-		sheldon \
+		$(DOCKER_IMG_NAME) \
 		./bin/check-convention
 
 # NAME
@@ -346,7 +348,7 @@ check.test.unit: prepare
 		--rm \
 		--mount type=bind,source="$(CURDIR)",target=$(MOUNT_PATH),readonly \
 		-w "$(MOUNT_PATH)" \
-		sheldon \
+		$(DOCKER_IMG_NAME) \
 		./lib/sheldon/test/test.sh $(TEST_NAMES)
 
 # NAME
@@ -365,7 +367,7 @@ stats: prepare
 		--rm \
 		--mount type=bind,source="$(CURDIR)",target=$(MOUNT_PATH),readonly \
 		-w "$(MOUNT_PATH)" \
-		sheldon \
+		$(DOCKER_IMG_NAME) \
 		./bin/check-evals
 
 # NAME
