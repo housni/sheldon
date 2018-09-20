@@ -1,6 +1,5 @@
+[![Build Status](https://travis-ci.org/housni/sheldon.svg?branch=master&style=flat-square)](https://travis-ci.org/housni/sheldon)  [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg?style=flat-square)](http://makeapullrequest.com) [![MIT Licensed](https://img.shields.io/badge/license-MIT-blue.svg?style=flat-square)](https://github.com/housni/sheldon/blob/master/LICENSE)
 <p align="center">
-  [![Build Status](https://travis-ci.org/housni/sheldon.svg?branch=master&style=flat-square)](https://travis-ci.org/housni/sheldon)  [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg?style=flat-square)](http://makeapullrequest.com) [![MIT Licensed](https://img.shields.io/badge/license-MIT-blue.svg?style=flat-square)](https://github.com/housni/sheldon/blob/master/LICENSE)
-  <br>
   <img src="./lib/sheldon/resources/logo/sheldon-logo.svg" alt="Sheldon logo">
 </p>
 
