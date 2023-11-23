@@ -256,6 +256,9 @@ for sig in INT TERM EXIT; do
 done
 trap _error ERR
 
+# Set DEBUG to true for enhanced debugging: run prefixed with "DEBUG=true"
+${DEBUG:-false} && set -vx
+
 # Make debugging easier
 # See: https://github.com/rawiriblundell/wiki.bash-hackers.org/blob/main/scripting/debuggingtips.md#making-xtrace-more-useful
 export PS4='+(${BASH_SOURCE}:${LINENO}): ${FUNCNAME[0]:+${FUNCNAME[0]}(): }'
