@@ -260,5 +260,5 @@ trap _error ERR
 ${DEBUG:-false} && set -vx
 
 # Make debugging easier
-# See: http://wiki.bash-hackers.org/scripting/debuggingtips#making_xtrace_more_useful
+# See: https://github.com/rawiriblundell/wiki.bash-hackers.org/blob/main/scripting/debuggingtips.md#making-xtrace-more-useful
 export PS4='+(${BASH_SOURCE}:${LINENO}): ${FUNCNAME[0]:+${FUNCNAME[0]}(): }'
