@@ -205,7 +205,7 @@ import() {
   Sheldon.Core.Libraries.load "${1}"
 
   # If a third param is present, treat it as an alias.
-  if [[ ! -z "${3+x}" ]]; then
+  if [[ -n "${3+x}" ]]; then
     eval "$3"="$1"
   fi
 }

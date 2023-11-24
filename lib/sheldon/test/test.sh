@@ -9,7 +9,7 @@
 # Run ArrayTest.testFirst
 #  ./test.sh ArrayTest.testFirst
 
-# shellcheck disable=SC1090
+# shellcheck source=/dev/null
 . "${0%/*}/../bootstrap.sh"
 set +o errtrace
 
@@ -71,7 +71,7 @@ for testFile in $allTestFiles; do
     # TODO: If function doesn't exist, show error.
     # If we have assigned parsedFunc earlier, that means a specific function
     # name was passed in as a param, so we only allow that function to run.
-    if [ ! -z "$parsedFunc" ] && [ "$testFunc" != "$parsedFunc" ]; then
+    if [ -n "$parsedFunc" ] && [ "$testFunc" != "$parsedFunc" ]; then
       continue
     fi
 
