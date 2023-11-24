@@ -80,7 +80,7 @@ ArrayTest.testPop() {
   read -ra result <<< "$($Test.array_diff args expected)"
   $Test.it 'Should pass if an element is popped off the end of the array.' \
     skip 'This has not been implemented.' <<EOF
-      [ -z $result ]
+      [ -z ${result[@]} ]
       [ "$popped" = 'html' ]
 EOF
 }
@@ -128,7 +128,7 @@ ArrayTest.testShift() {
   read -ra result <<< "$($Test.array_diff arg1 expected)"
   $Test.it 'Should pass if an element shifted.' \
     skip 'This has not been implemented.' <<EOF
-      [ -z "$result" ]
+      [ -z "${result[@]}" ]
       [ "$shifted" = 'var' ]
 EOF
 }

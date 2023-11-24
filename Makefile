@@ -45,9 +45,6 @@ MOUNT_PATH ?= /sheldon
 # Default: All scripts ending with '.sh' in the project.
 SHELL_SCRIPTS ?= $(shell find ./ -name '*.sh')
 
-# Files to run 'yamllint' against.
-YAML_FILES ?= .travis.yml
-
 # Name of test(s) to run.
 # Default: null
 TEST_NAMES ?=
@@ -105,7 +102,6 @@ strlen = "$(shell declare some; some=$1; echo $${\#some}; )"
 .PHONY: prepare
 prepare:
 	@echo; echo "Sheldon is working. Please wait..."; echo
-	@$(DOCKER) pull "sdesbure/yamllint" 2>&1 >/dev/null
 	@$(DOCKER) build --rm -t sheldon ./ 2>&1 >/dev/null
 	@$(DOCKER) pull "koalaman/shellcheck:stable" 2>&1 >/dev/null
 
@@ -122,7 +118,7 @@ prepare:
 check: check.lint check.test.unit
 
 # NAME
-#     check.lint - See target 'check.lint.shellcheck' and 'check.lint.yamllint'.
+#     check.lint - See target 'check.lint.shellcheck'.
 #
 # SYNOPSIS
 #     make [OPTION]... check.lint
@@ -131,7 +127,7 @@ check: check.lint check.test.unit
 #     See target 'shellcheck'.
 #
 .PHONY: check.lint
-check.lint: check.lint.shellcheck check.lint.yamllint check.lint.sheldon
+check.lint: check.lint.shellcheck check.lint.sheldon
 
 # NAME
 #     check.lint.shellcheck - Runs 'shellcheck' against shell scripts.
@@ -222,60 +218,6 @@ check.lint.sheldon:
 		-w "$(MOUNT_PATH)" \
 		$(DOCKER_IMG_NAME) \
 		./bin/check-convention
-
-# NAME
-#     check.lint.yamllint - Runs 'yamllint' against YAML files.
-#
-# SYNOPSIS
-#     make [OPTION]... check.lint.yamllint
-#
-# DESCRIPTION
-#     Runs a Docker container using an image with 'yamllint' installed and runs
-#     it against files in YAML_FILES.
-#
-#     MOUNT_PATH
-#         Location on the Docker container where Sheldon will be mounted.
-#         This is the location from which yamllint will run. It's also the
-#         directory the container will start in and it will be mounted as
-#         read-only.
-#
-#         See: https://hub.docker.com/r/sdesbure/yamllint/
-#
-#     YAML_FILES
-#         Files to run 'yamllint' against. These files may be space or
-#         new-line delimited and must be relative to MOUNT_PATH.
-#
-#     DOCKER
-#         Docker executable.
-#         Don't change this unless you know what you're doing.
-#
-#     CURDIR
-#         Absolute pathname of the current working directory.
-#         See: https://www.gnu.org/software/make/manual/html_node/Quick-Reference.html
-#
-# EXAMPLES
-#     make check.lint.yamllint
-#         Runs 'yamllint' against files in YAML_FILES.
-#
-#     make MOUNT_PATH="/usr/lib/sheldon/" check.lint.yamllint
-#         Mounts Sheldon to '/usr/lib/sheldon/' in the Docker container and runs
-#         'yamllint' against all files in YAML_FILES.
-#
-#     make YAML_FILES="./foobar.yaml" check.lint.yamllint
-#         Runs 'yamllint' against only './foobar.yaml'.
-#
-#     make YAML_FILES=$(find ./ -regex '.*\.ya?ml') check.lint.yamllint
-#         Runs 'yamllint' against all files in './' that end with either ".yml"
-#         or ".yaml".
-#
-.PHONY: check.lint.yamllint
-check.lint.yamllint: prepare
-	@$(MAKE) --no-print-directory TARGET_NAME=$@ _output.banner
-	@$(DOCKER) run \
-		--rm --mount type=bind,source="$(CURDIR)",target=$(MOUNT_PATH),readonly \
-		-w "$(MOUNT_PATH)" \
-		"sdesbure/yamllint" \
-		yamllint $(YAML_FILES)
 
 # NAME
 #     check.test - See target 'check.test.unit'.

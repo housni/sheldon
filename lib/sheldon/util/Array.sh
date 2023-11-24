@@ -154,6 +154,7 @@ Sheldon.Util.Array.update() {
   for default in "${!__shld_defaults[@]}"; do
     if [[ "${__shld_others[$default]+housni}" ]]; then
       __shld_defaults["$default"]="${__shld_others["$default"]}"
+      # shellcheck disable=SC2184
       unset __shld_others["$default"]
     fi
 
