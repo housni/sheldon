@@ -65,6 +65,15 @@ Sheldon.Core.Libraries.load() {
   # Append the file base name and the extension.
   path="${path}/${script}.sh"
 
-  # TODO: Make sure the file is sourced only once in a shell.
-  . "${__SHELDON[lib]}${path}"
+  # Make sure the file is sourced only once in a shell.
+  IFS=$" " read -ra libs_loaded <<< "${__SHELDON[libs_loaded]}"
+  for each_lib in "${libs_loaded[@]}"; do
+    if [[ "$each_lib" == "$namespace" ]]; then
+      # If a lib has already been loaded, we don't need to source it again
+      return
+    fi
+  done
+
+  . "${__SHELDON[lib]}${path}" && \
+    __SHELDON[libs_loaded]="${__SHELDON[libs_loaded]} $namespace"
 }
