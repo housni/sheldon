@@ -20,10 +20,16 @@ IFS=$'\n\t'
 # Setting and reserving some of Sheldons variables.
 # We know he doesn't like it when someone is in his spot.
 declare -A __SHELDON
+# Sheldon registry
 __SHELDON[registry]=
+# Sheldon root dir
 __SHELDON[root]="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+# Root dir from which libs are loaded
 __SHELDON[lib]="${__SHELDON[root]}"
+# Log level
 __SHELDON[log_level]=1
+# Loaded libs
+__SHELDON[libs_loaded]=
 
 # Logs text to screen with formatting to make it easier to catch in the midst
 # of a lot of output.
