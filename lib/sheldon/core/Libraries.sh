@@ -2,6 +2,8 @@
 
 # For Library.sh, we have to manually source files since the function that
 # sources is defined below and it can't be used until it's defined.
+# TODO: This lib should be in __SHELDON[libs_loaded]
+#
 # shellcheck source=/dev/null
 # shellcheck disable=SC2154
 . "${__SHELDON[lib]}"/util/Array.sh
@@ -30,50 +32,72 @@
 #
 # :param 1: (string) The namespace of the file you want to source.
 # :param 2: (string) The separator used in $1.
+# :param 3: TODO
 # :returns: (void) Sources file corresponding to $1.
 Sheldon.Core.Libraries.load() {
   local namespace
   local separator
   local path
   local -a parts
-  local -i len
-  local script
+  local transformation
 
   namespace="${1}"
   separator="${2:-.}"
+  transformation="${3:-}"
 
   # TODO: Check for '*' and escape it.
   IFS=$"${separator}" read -ra parts <<< "$namespace"
 
-  # Validate that we are using this for Sheldon libs.
-  if [[ ! "${parts[0]}" = 'Sheldon' ]]; then
-    _error 'Invalid library'
+  transformation=$(Sheldon.Core.Libraries.load.transform)
+  if [[ $# -lt 3 ]]; then
+    transformation=$(Sheldon.Core.Libraries.load.transform)
   fi
 
-  # We don't need the part with 'Sheldon'.
-  unset "parts[0]"
+  path="$($transformation "${parts[@]}")"
 
-  # Move the file base name to `_shld_script`.
-  len="${#parts[@]}"
-  script="${parts[len]}"
-  unset "parts[len]"
 
-  # Join the parts and convert them to lower case.
-  path=$(printf "/%s" "${parts[@]}")
-  path="${path,,}"
+  IFS=$" " read -ra lib_paths <<< "${__SHELDON[lib]}"
+  for lib_path in "${lib_paths[@]}"; do
+    if [[ -f "${lib_path}/${path}" ]]; then
 
-  # Append the file base name and the extension.
-  path="${path}/${script}.sh"
+      # Make sure the file is sourced only once in a shell.
+      IFS=$" " read -ra libs_loaded <<< "${__SHELDON[libs_loaded]}"
+      for each_lib in "${libs_loaded[@]}"; do
+        if [[ "$each_lib" == "${lib_path}${path}" ]]; then
+          # If a lib has already been loaded, we don't need to source it again
+          return
+        fi
+      done
 
-  # Make sure the file is sourced only once in a shell.
-  IFS=$" " read -ra libs_loaded <<< "${__SHELDON[libs_loaded]}"
-  for each_lib in "${libs_loaded[@]}"; do
-    if [[ "$each_lib" == "$namespace" ]]; then
-      # If a lib has already been loaded, we don't need to source it again
+      . "${lib_path}/${path}" && \
+        __SHELDON[libs_loaded]="${__SHELDON[libs_loaded]} ${lib_path}${path}"
       return
     fi
   done
 
-  . "${__SHELDON[lib]}${path}" && \
-    __SHELDON[libs_loaded]="${__SHELDON[libs_loaded]} $namespace"
+  _error "The library '$namespace' does not exist at '${lib_path}${path}'" $LINENO "${BASH_SOURCE[0]}" 127
+}
+
+Sheldon.Core.Libraries.load.transform() {
+  if [[ $# -eq 0 ]]; then
+    echo "${__SHELDON[libs_transform]}"
+    return
+  fi
+
+  __SHELDON[libs_transform]="${1}"
+}
+
+
+
+
+
+# TODO: Document this setter/getter
+Sheldon.Core.Libraries.path() {
+  # If a path is not set, return all paths
+  if [[ $# -eq 0 ]]; then
+      echo "${__SHELDON[lib]}"
+      return
+  fi
+
+  __SHELDON[lib]="${1}"
 }

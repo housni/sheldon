@@ -24,12 +24,13 @@ declare -A __SHELDON
 __SHELDON[registry]=
 # Sheldon root dir
 __SHELDON[root]="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-# Root dir from which libs are loaded
+# Root dir from which libs are loaded. Delimit multiple dirs with a space.
 __SHELDON[lib]="${__SHELDON[root]}"
 # Log level
 __SHELDON[log_level]=1
 # Loaded libs
 __SHELDON[libs_loaded]=
+__SHELDON[libs_transform]=
 
 # Logs text to screen with formatting to make it easier to catch in the midst
 # of a lot of output.
@@ -254,6 +255,31 @@ import() {
 . "${__SHELDON[lib]}/core/Sheldon.sh"
 # shellcheck source=/dev/null
 . "${__SHELDON[lib]}/core/Libraries.sh"
+
+
+_lib_transform() {
+  local -a parts
+  parts=( "$@" )
+
+  # We don't need the part with 'Sheldon'.
+  unset "parts[0]"
+
+  script="${parts[${#parts[@]}]}"
+  parts=( "${parts[@]:0:${#parts[@]}-1}" )
+
+  # Join the parts and convert them to lower case.
+  path=$(printf "/%s" "${parts[@]}")
+  path="${path,,}"
+
+  # Append the file base name and the extension.
+  echo "${path}/${script}.sh"
+}
+Sheldon.Core.Libraries.load.transform _lib_transform
+
+
+
+
+
 
 # Set the traps.
 for sig in INT TERM EXIT; do
