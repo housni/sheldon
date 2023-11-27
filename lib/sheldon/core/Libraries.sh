@@ -39,8 +39,6 @@ Sheldon.Core.Libraries.load() {
   local separator
   local path
   local -a parts
-  local -i len
-  local script
   local transformation
 
   namespace="${1}"
