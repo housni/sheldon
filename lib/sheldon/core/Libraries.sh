@@ -45,16 +45,6 @@ Sheldon.Core.Libraries.load() {
   separator="${2:-.}"
   transformation="${3:-}"
 
-  # Make sure the file is sourced only once in a shell.
-  IFS=$" " read -ra libs_loaded <<< "${__SHELDON[libs_loaded]}"
-  for each_lib in "${libs_loaded[@]}"; do
-    if [[ "$each_lib" == "$namespace" ]]; then
-      # If a lib has already been loaded, we don't need to source it again
-      return
-    fi
-  done
-
-
   # TODO: Check for '*' and escape it.
   IFS=$"${separator}" read -ra parts <<< "$namespace"
 
@@ -69,8 +59,18 @@ Sheldon.Core.Libraries.load() {
   IFS=$" " read -ra lib_paths <<< "${__SHELDON[lib]}"
   for lib_path in "${lib_paths[@]}"; do
     if [[ -f "${lib_path}/${path}" ]]; then
+
+      # Make sure the file is sourced only once in a shell.
+      IFS=$" " read -ra libs_loaded <<< "${__SHELDON[libs_loaded]}"
+      for each_lib in "${libs_loaded[@]}"; do
+        if [[ "$each_lib" == "${lib_path}${path}" ]]; then
+          # If a lib has already been loaded, we don't need to source it again
+          return
+        fi
+      done
+
       . "${lib_path}/${path}" && \
-        __SHELDON[libs_loaded]="${__SHELDON[libs_loaded]} $namespace"
+        __SHELDON[libs_loaded]="${__SHELDON[libs_loaded]} ${lib_path}${path}"
       return
     fi
   done
