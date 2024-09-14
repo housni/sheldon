@@ -20,6 +20,6 @@ sheldon=$(readlink -f "${0%/*}/../lib/sheldon/")
 occurrences=$(find "${sheldon}" -type f -name \*.sh -print0 \
   | xargs -0 grep -n -e "[^#]*eval\s")
 
-printf "All occurrences of 'eval' in code: \n%s\n" "${occurrences}"
+printf "\nAll occurrences of 'eval' in code: \n%s\n" "${occurrences}"
 
 exit $?
